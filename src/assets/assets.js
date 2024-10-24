@@ -6,6 +6,8 @@ import photo from './photo.jpg'
 import search_icon from './search-icon.jpg'
 import profile_icon from './profile-icon.jpg'
 import cart_icon from './cart-icon.jpg'
+import menu_icon from './menu-icon.jpg'
+import dropdown_icon from './dropdown-icon.jpg'
 
 export const assets ={
     logo,
@@ -15,7 +17,9 @@ export const assets ={
     photo,
     search_icon,
     profile_icon,
-    cart_icon
+    cart_icon,
+    menu_icon,
+    dropdown_icon
 }
 
 export const products = [
