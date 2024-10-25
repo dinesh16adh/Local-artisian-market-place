@@ -22,9 +22,7 @@ const Cart = ({ cartItems }) => {
             </div>
           ))}
         </div>
-      )}
-      {/* Footer Section */}
-      <Footer /> {/* Footer with subtle enhancements */}         
+      )}      
     </div>
   );
 };
