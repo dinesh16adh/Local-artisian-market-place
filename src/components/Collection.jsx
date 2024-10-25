@@ -5,48 +5,47 @@ import CartModal from './CartModal';
 
 const Collection = ({ addToCart }) => {
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedProduct, setSelectedProduct] = useState(null); // Track selected product for modal
-  const [showModal, setShowModal] = useState(false); // Show confirmation modal for "Add to Cart"
-  const [currentPage, setCurrentPage] = useState(1); // Track current page for products
-  const [categoryPage, setCategoryPage] = useState(1); // Track current page for categories
-  const productsPerPage = 12; // Show 12 products per page (3 items per row and 4 rows)
-  const categoriesPerPage = 15; // Show 15 categories per page in the sidebar
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [categoryPage, setCategoryPage] = useState(1);
+  const [autoSlideIndex, setAutoSlideIndex] = useState(0);
+
+  const productsPerPage = 12;
+  const categoriesPerPage = 15;
 
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to top when component mounts
   }, []);
 
-  // Filter products based on selected category
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setAutoSlideIndex((prevIndex) => prevIndex + 1);
+    }, 5000);
+    return () => clearInterval(intervalId);
+  }, []);
+
   const filteredProducts = selectedCategory === 'All'
     ? products
     : products.filter(product => product.category === selectedCategory);
-
-  // Calculate paginated products for the current page
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
-  // Get unique categories for sidebar and paginate them
   const categories = ['All', ...new Set(products.map(product => product.category))];
   const indexOfLastCategory = categoryPage * categoriesPerPage;
   const indexOfFirstCategory = indexOfLastCategory - categoriesPerPage;
   const currentCategories = categories.slice(indexOfFirstCategory, indexOfLastCategory);
 
-  // Pagination handlers for products
-  const handleNextPage = () => setCurrentPage((prevPage) => prevPage + 1);
-  const handlePreviousPage = () => setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  const handleNextPage = () => setCurrentPage((prev) => prev + 1);
+  const handlePreviousPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
-  // Pagination handlers for categories
-  const handleNextCategoryPage = () => setCategoryPage((prevPage) => prevPage + 1);
-  const handlePreviousCategoryPage = () => setCategoryPage((prevPage) => Math.max(prevPage - 1, 1));
+  const handleNextCategoryPage = () => setCategoryPage((prev) => prev + 1);
+  const handlePreviousCategoryPage = () => setCategoryPage((prev) => Math.max(prev - 1, 1));
 
-  // Handle product click to open modal
   const handleProductClick = (product) => setSelectedProduct(product);
-
-  // Close the product details modal
   const handleCloseModal = () => setSelectedProduct(null);
 
-  // Handle adding product to cart and show confirmation modal
   const handleAddToCart = (product, event) => {
     event.stopPropagation();
     addToCart(product);
@@ -64,7 +63,7 @@ const Collection = ({ addToCart }) => {
               <button
                 onClick={() => {
                   setSelectedCategory(category);
-                  setCurrentPage(1); // Reset to page 1 when changing category
+                  setCurrentPage(1);
                 }}
                 className={`w-full text-left p-3 rounded-lg font-medium ${
                   selectedCategory === category
@@ -77,8 +76,6 @@ const Collection = ({ addToCart }) => {
             </li>
           ))}
         </ul>
-
-        {/* Category Pagination Controls */}
         <div className="flex justify-between mt-4">
           <button
             onClick={handlePreviousCategoryPage}
@@ -110,7 +107,24 @@ const Collection = ({ addToCart }) => {
               className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer hover:shadow-xl transform transition-all duration-300 hover:scale-105"
               onClick={() => handleProductClick(product)}
             >
-              <img src={product.Image[0]} alt={product.name} className="w-full h-48 object-cover rounded-t-lg" />
+              {/* Auto-Sliding Image */}
+              <img
+                src={product.Image[autoSlideIndex % product.Image.length]}
+                alt={product.name}
+                className="w-full h-48 object-cover rounded-t-lg"
+              />
+              {/* Conditional 'See All Images' Button */}
+              {product.Image.length > 1 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedProduct(product);
+                  }}
+                  className="w-full py-1 text-blue-500 text-sm font-medium hover:text-blue-700 transition-colors"
+                >
+                  See All Images
+                </button>
+              )}
               <div className="p-5">
                 <h3 className="font-bold text-xl mb-2 text-gray-800">{product.name}</h3>
                 <p className="text-gray-600 mb-2 text-sm">{product.description}</p>
