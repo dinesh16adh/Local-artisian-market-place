@@ -6,7 +6,7 @@ import photo from './photo.jpg';
 import search_icon from './search-icon.jpg';
 import profile_icon from './profile-icon.jpg';
 import cart_icon from './cart-icon.jpg';
-
+import exchnage_icon from './exchange-icon.jpg'
 import dhaka_topi from './dhaka_topi.png';
 import banner from './banner.jpg';
 import jewelry from './jewelry.jpg';
@@ -14,10 +14,9 @@ import sculpture from './sculpture.jpg';
 import textiles from './textiles.jpg';
 import utensils from './utensils.jpg';
 import decor from './decor.jpg';
-
-import dhaka_topi from './dhaka_topi.png';  // New import
-import murti from './Murti.jpg'
-
+import quality_icon from './quality-icon.png';
+import murti from './Murti.jpg';
+import support_icon from './support-icon.jpg';
 
 export const assets = {
   logo,
@@ -28,7 +27,7 @@ export const assets = {
   search_icon,
   profile_icon,
   cart_icon,
-
+  exchnage_icon,
   banner,
   dhaka_topi,
   jewelry,
@@ -37,8 +36,9 @@ export const assets = {
   utensils,
   decor,
   dhaka_topi,  // New asset
-  murti
-
+  murti,
+  quality_icon,
+  support_icon
 };
 
 
