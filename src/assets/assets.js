@@ -8,6 +8,7 @@ import profile_icon from './profile-icon.jpg'
 import cart_icon from './cart-icon.jpg'
 import menu_icon from './menu-icon.jpg'
 import dropdown_icon from './dropdown-icon.jpg'
+import murti from './Murti.jpg'
 
 export const assets ={
     logo,
@@ -19,7 +20,8 @@ export const assets ={
     profile_icon,
     cart_icon,
     menu_icon,
-    dropdown_icon
+    dropdown_icon,
+    murti
 }
 
 export const products = [
