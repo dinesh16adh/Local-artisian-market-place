@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { assets, products } from '../assets/assets';
-
 import { Link } from 'react-router-dom';
 import CartModal from './CartModal';
 import Footer from './Footer';
 import ProductModal from './ProductModal';
-
-import CartModal from './CartModal'; // Import the new CartModal
-// import Footer from '../components/Footer'; // Import Footer component
-import Hero from './Hero';
-
 
 const HomePage = ({ addToCart }) => {
   const [visibleProducts, setVisibleProducts] = useState(12); 
@@ -54,9 +48,7 @@ const HomePage = ({ addToCart }) => {
   const hasMoreCategories = categories.length > 5;
 
   return (
-    
     <div>
-
       <div
         className="relative w-full h-80 bg-cover bg-center flex items-center justify-center"
         style={{
@@ -73,14 +65,6 @@ const HomePage = ({ addToCart }) => {
 
       <div className="flex justify-center my-4 flex-wrap gap-2">
         {limitedCategories.map((category) => (
-
-      <div>
-        <Hero/>
-      </div>
-      {/* Category Filter */}
-      <div className="flex justify-center my-4">
-        {categories.map((category) => (
-
           <button
             key={category}
             onClick={() => setCategoryFilter(category)}
@@ -130,11 +114,6 @@ const HomePage = ({ addToCart }) => {
       <ProductModal product={selectedProduct} isOpen={!!selectedProduct} onClose={handleCloseModal} />
 
       <CartModal showModal={showModal} setShowModal={setShowModal} />
-
-      <Footer />
-
-               
-
     </div>
   );
 };
