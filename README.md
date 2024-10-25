@@ -33,10 +33,10 @@ This project is a **React-based** e-commerce platform for showcasing and selling
 
 3. Start the application:
    ```bash
-   npm start
+   npm run dev
    ```
 
-4. Navigate to `http://localhost:3000` to view the app in your browser.
+4. Navigate to `http://localhost:5173` to view the app in your browser.
 
 ---
 
