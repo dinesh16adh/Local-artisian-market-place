@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import Cart from './components/Cart';
-import Collection from './pages/Collection';
+import Collection from './components/Collection';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Product from './pages/Product';
@@ -35,7 +35,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage addToCart={addToCart} />} />
         <Route path="/cart" element={<Cart cartItems={cartItems} />} />
-        <Route path="/collection" element={<Collection />} />
+        <Route path="/collection" element={<Collection addToCart={addToCart} />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/product/:productid" element={<Product />} />
