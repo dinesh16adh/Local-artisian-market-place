@@ -5,14 +5,20 @@ const ProductModal = ({ product, isOpen, onClose }) => {
 
   if (!isOpen || !product) return null;
 
+  // Move to the next image only if there are multiple images
   const handleNextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % product.Image.length);
+    if (product.Image.length > 1) {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % product.Image.length);
+    }
   };
 
+  // Move to the previous image only if there are multiple images
   const handlePrevImage = () => {
-    setCurrentImageIndex((prevIndex) => 
-      prevIndex === 0 ? product.Image.length - 1 : prevIndex - 1
-    );
+    if (product.Image.length > 1) {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === 0 ? product.Image.length - 1 : prevIndex - 1
+      );
+    }
   };
 
   return (
