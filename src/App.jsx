@@ -4,7 +4,7 @@ import HomePage from './components/HomePage';
 import Cart from './components/Cart';
 import Collection from './components/Collection';
 import About from './components/AboutUs';
-import Contact from './pages/Contact';
+import Contact from './components/Contact';
 import Product from './pages/Product';
 import Login from './pages/Login';
 import Placeorder from './pages/Placeorder';
