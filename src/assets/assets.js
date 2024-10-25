@@ -13,7 +13,6 @@ import sculpture from './sculpture.jpg';
 import textiles from './textiles.jpg';
 import utensils from './utensils.jpg';
 import decor from './decor.jpg';
-
 import murti from './Murti.jpg';
 
 
@@ -34,7 +33,7 @@ export const assets = {
   utensils,
   decor,
   dhaka_topi,  // New asset
-  murti
+  murti,
 };
 
 
@@ -48,7 +47,7 @@ export const products = [
     origin: 'Nepal',
     materials: 'Bamboo, Twine',
     price: '1500',
-    Image: [doko],
+    Image: [doko, murti], // Example of multiple images
     category: 'Handmade',
     date: 12345678,
     bestseller: true
@@ -146,7 +145,7 @@ export const products = [
     origin: 'Nepal',
     materials: 'Cotton, Silk, Wool',
     price: '1800',
-    Image: [textiles],
+    Image: [textiles, utensils],
     category: 'Textiles',
     date: 12345678,
     bestseller: false
@@ -174,7 +173,7 @@ export const products = [
     origin: 'Nepal',
     materials: 'Wood, Metal, Fabric',
     price: '2300',
-    Image: [decor],
+    Image: [decor, art],
     category: 'Decor',
     date: 12345678,
     bestseller: true
