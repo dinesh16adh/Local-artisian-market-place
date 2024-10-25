@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import CartModal from './CartModal';
 import ProductModal from './ProductModal';
 
+import Hero from './Hero';
+import Ourpolicies from './Ourpolicies';
+
 const HomePage = ({ addToCart }) => {
   const [visibleProducts, setVisibleProducts] = useState(12); 
   const [categoryFilter, setCategoryFilter] = useState('All');
@@ -126,6 +129,9 @@ const HomePage = ({ addToCart }) => {
 
       {/* Cart Confirmation Modal */}
       <CartModal showModal={showModal} setShowModal={setShowModal} />
+
+      {/* <Footer /> */}
+      <Ourpolicies/>
     </div>
   );
 };
