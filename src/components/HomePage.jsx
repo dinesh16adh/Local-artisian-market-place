@@ -3,7 +3,6 @@ import { assets, products } from '../assets/assets';
 import { Link } from 'react-router-dom';
 import CartModal from './CartModal';
 import ProductModal from './ProductModal';
-
 import Hero from './Hero';
 import Ourpolicies from './Ourpolicies';
 import Newsletterbox from './Newsletterbox';
@@ -13,7 +12,8 @@ const HomePage = ({ addToCart }) => {
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [showModal, setShowModal] = useState(false);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const [selectedProduct, setSelectedProduct] = useState(null); // For product modal
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showNewsletterPopup, setShowNewsletterPopup] = useState(false);
 
   const messages = [
     "Find Nepali local homemade products, arts, and more in one place.",
@@ -28,6 +28,14 @@ const HomePage = ({ addToCart }) => {
 
     return () => clearInterval(messageInterval);
   }, [messages.length]);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('hasVisited');
+    if (!hasVisited) {
+      setShowNewsletterPopup(true);
+      localStorage.setItem('hasVisited', true);
+    }
+  }, []);
 
   const filteredProducts = categoryFilter === 'All' 
     ? products 
@@ -46,12 +54,18 @@ const HomePage = ({ addToCart }) => {
     setSelectedProduct(null);
   };
 
+  const closeNewsletterPopup = () => {
+    setShowNewsletterPopup(false);
+  };
+
   const categories = ['All', ...new Set(products.map(product => product.category))];
   const limitedCategories = categories.slice(0, 5);
   const hasMoreCategories = categories.length > 5;
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {showNewsletterPopup && <Newsletterbox mode="popup" closeNewsletter={closeNewsletterPopup} />}
+
       {/* Banner Section */}
       <div
         className="relative w-full h-80 bg-cover bg-center flex items-center justify-center"
@@ -70,6 +84,9 @@ const HomePage = ({ addToCart }) => {
           </Link>
         </div>
       </div>
+
+      {/* Compact Inline Newsletter Box */}
+      {!showNewsletterPopup && <Newsletterbox mode="inline" />}
 
       {/* Category Filter */}
       <div className="flex justify-center my-6 flex-wrap gap-2">
@@ -131,9 +148,7 @@ const HomePage = ({ addToCart }) => {
       {/* Cart Confirmation Modal */}
       <CartModal showModal={showModal} setShowModal={setShowModal} />
 
-      {/* <Footer /> */}
-      <Ourpolicies/>
-      <Newsletterbox />
+      <Ourpolicies />
     </div>
   );
 };
