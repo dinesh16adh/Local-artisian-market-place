@@ -15,7 +15,6 @@ import textiles from './textiles.jpg';
 import utensils from './utensils.jpg';
 import decor from './decor.jpg';
 
-import dhaka_topi from './dhaka_topi.png';  // New import
 import murti from './Murti.jpg'
 
 
