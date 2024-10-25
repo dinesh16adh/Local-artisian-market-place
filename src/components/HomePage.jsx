@@ -6,6 +6,7 @@ import ProductModal from './ProductModal';
 
 import Hero from './Hero';
 import Ourpolicies from './Ourpolicies';
+import Newsletterbox from './Newsletterbox';
 
 const HomePage = ({ addToCart }) => {
   const [visibleProducts, setVisibleProducts] = useState(12); 
@@ -132,6 +133,7 @@ const HomePage = ({ addToCart }) => {
 
       {/* <Footer /> */}
       <Ourpolicies/>
+      <Newsletterbox />
     </div>
   );
 };
