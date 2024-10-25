@@ -14,9 +14,11 @@ import sculpture from './sculpture.jpg';
 import textiles from './textiles.jpg';
 import utensils from './utensils.jpg';
 import decor from './decor.jpg';
+
 import quality_icon from './quality-icon.png';
 import murti from './Murti.jpg';
 import support_icon from './support-icon.jpg';
+
 
 export const assets = {
   logo,
