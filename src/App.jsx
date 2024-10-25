@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import Placeorder from './pages/Placeorder';
 import Order from './pages/Order';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 const App = () => {
   // Cart state management
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="/place-order" element={<Placeorder />} />
         <Route path="/orders" element={<Order />} />
       </Routes>
+      <Footer/>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import photo from './photo.jpg';
 import search_icon from './search-icon.jpg';
 import profile_icon from './profile-icon.jpg';
 import cart_icon from './cart-icon.jpg';
+
 import dhaka_topi from './dhaka_topi.png';
 import banner from './banner.jpg';
 import jewelry from './jewelry.jpg';
@@ -13,6 +14,10 @@ import sculpture from './sculpture.jpg';
 import textiles from './textiles.jpg';
 import utensils from './utensils.jpg';
 import decor from './decor.jpg';
+
+import dhaka_topi from './dhaka_topi.png';  // New import
+import murti from './Murti.jpg'
+
 
 export const assets = {
   logo,
@@ -23,14 +28,19 @@ export const assets = {
   search_icon,
   profile_icon,
   cart_icon,
+
   banner,
   dhaka_topi,
   jewelry,
   sculpture,
   textiles,
   utensils,
-  decor
+  decor,
+  dhaka_topi,  // New asset
+  murti
+
 };
+
 
 export const products = [
   {
