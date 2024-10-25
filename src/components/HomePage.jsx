@@ -6,6 +6,7 @@ import ProductModal from './ProductModal';
 import Hero from './Hero';
 import Ourpolicies from './Ourpolicies';
 import Newsletterbox from './Newsletterbox';
+import ProductSlider from './ProductSlider';
 
 const HomePage = ({ addToCart }) => {
   const [visibleProducts, setVisibleProducts] = useState(12); 
@@ -114,7 +115,8 @@ const HomePage = ({ addToCart }) => {
             className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300 transform hover:scale-105"
             onClick={() => handleProductClick(product)}
           >
-            <img src={product.Image[0]} alt={product.name} className="w-full h-48 object-cover" />
+            {/* Use ProductSlider for multiple images */}
+            <ProductSlider images={product.Image} />
             <div className="p-5">
               <h3 className="font-bold text-xl mb-2">{product.name}</h3>
               <p className="text-gray-600 text-sm mb-2">{product.description}</p>
