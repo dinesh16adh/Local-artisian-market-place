@@ -6,7 +6,6 @@ import photo from './photo.jpg';
 import search_icon from './search-icon.jpg';
 import profile_icon from './profile-icon.jpg';
 import cart_icon from './cart-icon.jpg';
-import exchnage_icon from './exchange-icon.jpg'
 import dhaka_topi from './dhaka_topi.png';
 import banner from './banner.jpg';
 import jewelry from './jewelry.jpg';
@@ -21,6 +20,8 @@ import support_icon from './support-icon.jpg';
 import menu_icon from './menu-icon.jpg'
 
 
+
+
 export const assets = {
   logo,
   doko,
@@ -30,7 +31,6 @@ export const assets = {
   search_icon,
   profile_icon,
   cart_icon,
-  exchnage_icon,
   banner,
   dhaka_topi,
   jewelry,
@@ -44,6 +44,7 @@ export const assets = {
   support_icon,
   dropdown_icon,
   menu_icon
+
 };
 
 
@@ -57,7 +58,7 @@ export const products = [
     origin: 'Nepal',
     materials: 'Bamboo, Twine',
     price: '1500',
-    Image: [doko],
+    Image: [doko, murti], // Example of multiple images
     category: 'Handmade',
     date: 12345678,
     bestseller: true
@@ -155,7 +156,7 @@ export const products = [
     origin: 'Nepal',
     materials: 'Cotton, Silk, Wool',
     price: '1800',
-    Image: [textiles],
+    Image: [textiles, utensils],
     category: 'Textiles',
     date: 12345678,
     bestseller: false
@@ -183,7 +184,7 @@ export const products = [
     origin: 'Nepal',
     materials: 'Wood, Metal, Fabric',
     price: '2300',
-    Image: [decor],
+    Image: [decor, art],
     category: 'Decor',
     date: 12345678,
     bestseller: true

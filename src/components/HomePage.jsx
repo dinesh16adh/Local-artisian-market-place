@@ -3,17 +3,18 @@ import { assets, products } from '../assets/assets';
 import { Link } from 'react-router-dom';
 import CartModal from './CartModal';
 import ProductModal from './ProductModal';
-
 import Hero from './Hero';
 import Ourpolicies from './Ourpolicies';
 import Newsletterbox from './Newsletterbox';
+import ProductSlider from './ProductSlider';
 
 const HomePage = ({ addToCart }) => {
   const [visibleProducts, setVisibleProducts] = useState(12); 
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [showModal, setShowModal] = useState(false);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const [selectedProduct, setSelectedProduct] = useState(null); // For product modal
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showNewsletterPopup, setShowNewsletterPopup] = useState(false);
 
   const messages = [
     "Find Nepali local homemade products, arts, and more in one place.",
@@ -28,6 +29,14 @@ const HomePage = ({ addToCart }) => {
 
     return () => clearInterval(messageInterval);
   }, [messages.length]);
+
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('hasVisited');
+    if (!hasVisited) {
+      setShowNewsletterPopup(true);
+      localStorage.setItem('hasVisited', true);
+    }
+  }, []);
 
   const filteredProducts = categoryFilter === 'All' 
     ? products 
@@ -46,12 +55,18 @@ const HomePage = ({ addToCart }) => {
     setSelectedProduct(null);
   };
 
+  const closeNewsletterPopup = () => {
+    setShowNewsletterPopup(false);
+  };
+
   const categories = ['All', ...new Set(products.map(product => product.category))];
   const limitedCategories = categories.slice(0, 5);
   const hasMoreCategories = categories.length > 5;
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {showNewsletterPopup && <Newsletterbox mode="popup" closeNewsletter={closeNewsletterPopup} />}
+
       {/* Banner Section */}
       <div
         className="relative w-full h-80 bg-cover bg-center flex items-center justify-center"
@@ -70,6 +85,9 @@ const HomePage = ({ addToCart }) => {
           </Link>
         </div>
       </div>
+
+      {/* Compact Inline Newsletter Box */}
+      {!showNewsletterPopup && <Newsletterbox mode="inline" />}
 
       {/* Category Filter */}
       <div className="flex justify-center my-6 flex-wrap gap-2">
@@ -97,7 +115,8 @@ const HomePage = ({ addToCart }) => {
             className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300 transform hover:scale-105"
             onClick={() => handleProductClick(product)}
           >
-            <img src={product.Image[0]} alt={product.name} className="w-full h-48 object-cover" />
+            {/* Use ProductSlider for multiple images */}
+            <ProductSlider images={product.Image} />
             <div className="p-5">
               <h3 className="font-bold text-xl mb-2">{product.name}</h3>
               <p className="text-gray-600 text-sm mb-2">{product.description}</p>
@@ -131,9 +150,7 @@ const HomePage = ({ addToCart }) => {
       {/* Cart Confirmation Modal */}
       <CartModal showModal={showModal} setShowModal={setShowModal} />
 
-      {/* <Footer /> */}
-      <Ourpolicies/>
-      <Newsletterbox />
+      <Ourpolicies />
     </div>
   );
 };
