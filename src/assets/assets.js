@@ -14,10 +14,11 @@ import sculpture from './sculpture.jpg';
 import textiles from './textiles.jpg';
 import utensils from './utensils.jpg';
 import decor from './decor.jpg';
-
+import dropdown_icon from './dropdown-icon.jpg'
 import quality_icon from './quality-icon.png';
 import murti from './Murti.jpg';
 import support_icon from './support-icon.jpg';
+import menu_icon from './menu-icon.jpg'
 
 
 export const assets = {
@@ -40,7 +41,9 @@ export const assets = {
   dhaka_topi,  // New asset
   murti,
   quality_icon,
-  support_icon
+  support_icon,
+  dropdown_icon,
+  menu_icon
 };
 
 
