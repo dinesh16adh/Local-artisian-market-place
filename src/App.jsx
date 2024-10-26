@@ -6,7 +6,8 @@ import Collection from './components/Collection';
 import About from './components/AboutUs';
 import Contact from './components/Contact';
 import Product from './pages/Product';
-import Login from './pages/Login';
+import Login from './components/Login';
+import Signup from './components/SignUp';
 import Placeorder from './pages/Placeorder';
 import Order from './pages/Order';
 import Navbar from './components/Navbar';
@@ -40,6 +41,7 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/product/:productid" element={<Product />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />        
         <Route path="/place-order" element={<Placeorder />} />
         <Route path="/orders" element={<Order />} />
       </Routes>
