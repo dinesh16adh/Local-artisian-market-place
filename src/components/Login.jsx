@@ -1,13 +1,47 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5174';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle login logic here
+    try {
+      const response = await fetch(`${backendUrl}/auth/log-in`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Unexpected response from server');
+      }
+      
+      if (!response.ok) {
+        throw new Error('Login failed. Please check your credentials.');
+      }
+      
+      const data = await response.json();
+      console.log('Login successful:', data);
+
+      // Store user session info in localStorage
+      const { user } = data;
+      localStorage.setItem('user', JSON.stringify({ id: user.id, fullName: user.username, email: user.email }));
+
+      // Redirect to homepage and reload to refresh data
+      navigate('/');
+      window.location.reload();  // Forces a reload to refresh the homepage
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -35,6 +69,8 @@ const Login = () => {
             placeholder="Enter your password"
             required
           />
+          
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           
           <button
             type="submit"
