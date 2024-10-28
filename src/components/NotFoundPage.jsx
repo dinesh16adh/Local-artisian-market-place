@@ -4,14 +4,14 @@ import { assets } from '../assets/assets';
 
 const NotFoundPage = () => {
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-gray-100 text-center">
+    <div className="w-full flex flex-col items-center bg-gray-100 text-center py-10">
       {/* Background and Image */}
       <div
-        className="w-full h-full bg-cover bg-center relative rounded-md shadow-lg"
+        className="w-full max-w-3xl mx-auto bg-cover bg-center relative rounded-md shadow-lg"
         style={{ backgroundImage: `url(${assets.banner})` }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-900 via-red-800 to-transparent opacity-80"></div>
-        <div className="relative z-10 flex flex-col items-center justify-center h-full mb-20">
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-900 via-red-800 to-transparent opacity-80 rounded-md"></div>
+        <div className="relative z-10 flex flex-col items-center py-10 px-6">
           <h1 className="text-5xl font-bold text-white mb-4">404</h1>
           <p className="text-2xl text-red-400 font-semibold">
             Page Not Found
