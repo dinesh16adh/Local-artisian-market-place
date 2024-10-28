@@ -11,6 +11,7 @@ const Collection = ({ addToCart }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [categoryPage, setCategoryPage] = useState(1);
   const [autoSlideIndex, setAutoSlideIndex] = useState(0);
+  const [sortOrder, setSortOrder] = useState('relevant'); // Added state for sortin
 
   const productsPerPage = 12;
   const categoriesPerPage = 15;
@@ -29,6 +30,11 @@ const Collection = ({ addToCart }) => {
   const filteredProducts = selectedCategory === 'All'
     ? products
     : products.filter(product => product.category === selectedCategory);
+    const sortedProducts = filteredProducts.sort((a, b) => {
+      if (sortOrder === 'highToLow') return b.price - a.price;
+      if (sortOrder === 'lowToHigh') return a.price - b.price;
+      return 0;
+    });
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
@@ -59,8 +65,23 @@ const Collection = ({ addToCart }) => {
     setShowSidebar(false); // Hide sidebar after selecting a category
   };
 
+  // // Filter and sort products
+  // const filteredProducts = selectedCategory === 'All'
+  //   ? products
+  //   : products.filter(product => product.category === selectedCategory);
+
+  // const sortedProducts = filteredProducts.sort((a, b) => {
+  //   if (sortOrder === 'highToLow') return b.price - a.price;
+  //   if (sortOrder === 'lowToHigh') return a.price - b.price;
+  //   return 0;
+  // });
+
+
+
   return (
     <div className="flex flex-col md:flex-row p-6 bg-gray-50 min-h-screen">
+
+      
       {/* Button to Toggle Sidebar on Smaller Screens */}
       <button
         onClick={() => setShowSidebar(!showSidebar)}
@@ -155,6 +176,18 @@ const Collection = ({ addToCart }) => {
 
       {/* Product Display */}
       <div className="w-full md:w-3/4 ml-0 md:ml-1/4">
+      <div className="flex justify-end items-center mb-4">
+          
+          <select
+            onChange={(e) => setSortOrder(e.target.value)}
+            value={sortOrder}
+            className="p-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-indigo-600"
+          >
+            <option value="relevant">Relevant</option>
+            <option value="highToLow">Price: High to Low</option>
+            <option value="lowToHigh">Price: Low to High</option>
+          </select>
+      </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {currentProducts.map((product) => (
             <div
