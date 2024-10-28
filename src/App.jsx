@@ -13,7 +13,7 @@ import Order from './pages/Order';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import NotFoundPage from './components/NotFoundPage';
-
+import UserProfile  from './components/UserProfile';
 const App = () => {
   // Cart state management
   const [cartItems, setCartItems] = useState([]);
@@ -45,6 +45,8 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />        
         <Route path="/place-order" element={<Placeorder />} />
         <Route path="/orders" element={<Order />} />
+        <Route path="/profile" element={<UserProfile />} />
+        
 
         {/* Catch-all route for 404 page */}
         <Route path="*" element={<NotFoundPage />} />        
