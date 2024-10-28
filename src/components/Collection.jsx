@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { products } from '../assets/assets';
 import ProductModal from './ProductModal';
 import CartModal from './CartModal';
@@ -11,78 +11,69 @@ const Collection = ({ addToCart }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [categoryPage, setCategoryPage] = useState(1);
   const [autoSlideIndex, setAutoSlideIndex] = useState(0);
-  const [sortOrder, setSortOrder] = useState('relevant'); // Added state for sortin
+  const [sortOrder, setSortOrder] = useState('relevant');
 
   const productsPerPage = 12;
   const categoriesPerPage = 15;
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Scroll to top when component mounts
+    window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setAutoSlideIndex((prevIndex) => prevIndex + 1);
-    }, 5000);
+    const intervalId = setInterval(() => setAutoSlideIndex((prevIndex) => prevIndex + 1), 5000);
     return () => clearInterval(intervalId);
   }, []);
 
-  const filteredProducts = selectedCategory === 'All'
-    ? products
-    : products.filter(product => product.category === selectedCategory);
-    const sortedProducts = filteredProducts.sort((a, b) => {
+  const filteredProducts = useMemo(() => (
+    selectedCategory === 'All' ? products : products.filter(product => product.category === selectedCategory)
+  ), [selectedCategory]);
+
+  const sortedProducts = useMemo(() => (
+    filteredProducts.sort((a, b) => {
       if (sortOrder === 'highToLow') return b.price - a.price;
       if (sortOrder === 'lowToHigh') return a.price - b.price;
       return 0;
-    });
+    })
+  ), [filteredProducts, sortOrder]);
+
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const currentProducts = useMemo(() => (
+    sortedProducts.slice(indexOfFirstProduct, indexOfLastProduct)
+  ), [sortedProducts, indexOfFirstProduct, indexOfLastProduct]);
 
-  const categories = ['All', ...new Set(products.map(product => product.category))];
+  const categories = useMemo(() => (
+    ['All', ...new Set(products.map(product => product.category))]
+  ), [products]);
+
   const indexOfLastCategory = categoryPage * categoriesPerPage;
   const indexOfFirstCategory = indexOfLastCategory - categoriesPerPage;
-  const currentCategories = categories.slice(indexOfFirstCategory, indexOfLastCategory);
+  const currentCategories = useMemo(() => (
+    categories.slice(indexOfFirstCategory, indexOfLastCategory)
+  ), [categories, indexOfFirstCategory, indexOfLastCategory]);
 
-  const handleNextPage = () => setCurrentPage((prev) => prev + 1);
-  const handlePreviousPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const handleNextPage = useCallback(() => setCurrentPage(prev => prev + 1), []);
+  const handlePreviousPage = useCallback(() => setCurrentPage(prev => Math.max(prev - 1, 1)), []);
+  const handleNextCategoryPage = useCallback(() => setCategoryPage(prev => prev + 1), []);
+  const handlePreviousCategoryPage = useCallback(() => setCategoryPage(prev => Math.max(prev - 1, 1)), []);
 
-  const handleNextCategoryPage = () => setCategoryPage((prev) => prev + 1);
-  const handlePreviousCategoryPage = () => setCategoryPage((prev) => Math.max(prev - 1, 1));
+  const handleProductClick = useCallback((product) => setSelectedProduct(product), []);
+  const handleCloseModal = useCallback(() => setSelectedProduct(null), []);
+  const handleCategorySelect = useCallback((category) => {
+    setSelectedCategory(category);
+    setCurrentPage(1);
+    setShowSidebar(false);
+  }, []);
 
-  const handleProductClick = (product) => setSelectedProduct(product);
-  const handleCloseModal = () => setSelectedProduct(null);
-
-  const handleAddToCart = (product, event) => {
+  const handleAddToCart = useCallback((product, event) => {
     event.stopPropagation();
     addToCart(product);
     setShowModal(true);
-  };
-
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-    setCurrentPage(1);
-    setShowSidebar(false); // Hide sidebar after selecting a category
-  };
-
-  // // Filter and sort products
-  // const filteredProducts = selectedCategory === 'All'
-  //   ? products
-  //   : products.filter(product => product.category === selectedCategory);
-
-  // const sortedProducts = filteredProducts.sort((a, b) => {
-  //   if (sortOrder === 'highToLow') return b.price - a.price;
-  //   if (sortOrder === 'lowToHigh') return a.price - b.price;
-  //   return 0;
-  // });
-
-
+  }, [addToCart]);
 
   return (
     <div className="flex flex-col md:flex-row p-6 bg-gray-50 min-h-screen">
-
-      
-      {/* Button to Toggle Sidebar on Smaller Screens */}
       <button
         onClick={() => setShowSidebar(!showSidebar)}
         className="fixed top-4 right-4 z-50 p-2 bg-indigo-600 text-white rounded-full shadow-md text-xs md:text-sm md:hidden"
@@ -90,7 +81,6 @@ const Collection = ({ addToCart }) => {
         {showSidebar ? 'Close' : 'Categories'}
       </button>
 
-      {/* Sidebar - Fullscreen on Small Screens */}
       {showSidebar && (
         <div className="fixed inset-0 bg-white z-40 flex flex-col p-4 overflow-y-auto md:hidden">
           <h2 className="text-lg font-semibold mb-4 text-gray-700">Categories</h2>
@@ -133,8 +123,7 @@ const Collection = ({ addToCart }) => {
         </div>
       )}
 
-      {/* Sidebar for Larger Screens */}
-      <div className={`w-full md:w-1/4 mb-6 md:mb-0 pr-4 hidden md:flex flex-col h-full bg-white`}>
+      <div className="w-full md:w-1/4 mb-6 md:mb-0 pr-4 hidden md:flex flex-col h-full bg-white">
         <h2 className="text-2xl font-semibold mb-4 text-gray-700">Categories</h2>
         <ul className="space-y-3">
           {currentCategories.map((category) => (
@@ -174,10 +163,8 @@ const Collection = ({ addToCart }) => {
         </div>
       </div>
 
-      {/* Product Display */}
       <div className="w-full md:w-3/4 ml-0 md:ml-1/4">
-      <div className="flex justify-end items-center mb-4">
-          
+        <div className="flex justify-end items-center mb-4">
           <select
             onChange={(e) => setSortOrder(e.target.value)}
             value={sortOrder}
@@ -187,7 +174,7 @@ const Collection = ({ addToCart }) => {
             <option value="highToLow">Price: High to Low</option>
             <option value="lowToHigh">Price: Low to High</option>
           </select>
-      </div>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {currentProducts.map((product) => (
             <div
@@ -195,41 +182,37 @@ const Collection = ({ addToCart }) => {
               className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer hover:shadow-xl transform transition-all duration-300 hover:scale-105"
               onClick={() => handleProductClick(product)}
             >
-              {/* Auto-Sliding Image */}
               <img
                 src={product.Image[autoSlideIndex % product.Image.length]}
                 alt={product.name}
                 className="w-full h-48 object-cover rounded-t-lg"
               />
-              {/* Conditional 'See All Images' Button */}
               {product.Image.length > 1 && (
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    setSelectedProduct(product);
+                    setAutoSlideIndex(autoSlideIndex + 1);
                   }}
-                  className="w-full py-1 text-blue-500 text-sm font-medium hover:text-blue-700 transition-colors"
+                  className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full shadow-md"
                 >
-                  See All Images
+                  Slide
                 </button>
               )}
-              <div className="p-5">
-                <h3 className="font-bold text-xl mb-2 text-gray-800">{product.name}</h3>
-                <p className="text-gray-600 mb-2 text-sm">{product.description}</p>
-                <p className="text-gray-800 font-semibold mb-4">Price: ${product.price}</p>
-                <button
-                  onClick={(e) => handleAddToCart(product, e)}
-                  className="w-full py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-500 transition-colors"
-                >
-                  Add to Cart
-                </button>
+              <div className="p-4">
+                <h3 className="text-lg font-semibold text-gray-700 truncate">{product.name}</h3>
+                <p className="text-gray-600 text-sm truncate">{product.category}</p>
+                <p className="text-indigo-600 font-bold mt-2">${product.price}</p>
               </div>
+              <button
+                onClick={(e) => handleAddToCart(product, e)}
+                className="block w-full py-2 text-center text-sm font-medium bg-indigo-600 text-white rounded-b-lg hover:bg-indigo-700 transition-all"
+              >
+                Add to Cart
+              </button>
             </div>
           ))}
         </div>
-
-        {/* Product Pagination Controls */}
-        <div className="flex justify-between items-center mt-6">
+        <div className="flex justify-center mt-6 space-x-4">
           <button
             onClick={handlePreviousPage}
             disabled={currentPage === 1}
@@ -239,12 +222,11 @@ const Collection = ({ addToCart }) => {
           >
             Previous
           </button>
-          <span className="text-gray-600 font-medium">Page {currentPage}</span>
           <button
             onClick={handleNextPage}
-            disabled={indexOfLastProduct >= filteredProducts.length}
+            disabled={indexOfLastProduct >= sortedProducts.length}
             className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-              indexOfLastProduct >= filteredProducts.length ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-500'
+              indexOfLastProduct >= sortedProducts.length ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-indigo-600 text-white hover:bg-indigo-500'
             }`}
           >
             Next
@@ -252,11 +234,14 @@ const Collection = ({ addToCart }) => {
         </div>
       </div>
 
-      {/* Product Details Modal */}
-      <ProductModal product={selectedProduct} isOpen={!!selectedProduct} onClose={handleCloseModal} />
-
-      {/* Cart Confirmation Modal */}
-      <CartModal showModal={showModal} setShowModal={setShowModal} />
+      {selectedProduct && (
+        <ProductModal
+          product={selectedProduct}
+          onClose={handleCloseModal}
+          onAddToCart={addToCart}
+        />
+      )}
+      {showModal && <CartModal onClose={() => setShowModal(false)} />}
     </div>
   );
 };
