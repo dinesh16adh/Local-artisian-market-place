@@ -15,6 +15,7 @@ const HomePage = ({ addToCart }) => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showNewsletterPopup, setShowNewsletterPopup] = useState(false);
+  const [userName, setUserName] = useState(null); // State for the user's name
 
   const messages = [
     "Find Nepali local homemade products, arts, and more in one place.",
@@ -23,6 +24,12 @@ const HomePage = ({ addToCart }) => {
   ];
 
   useEffect(() => {
+    // Check if the user is logged in and retrieve their name
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser && storedUser.fullName) {
+      setUserName(storedUser.fullName);
+    }
+
     const messageInterval = setInterval(() => {
       setCurrentMessageIndex((prevIndex) => (prevIndex + 1) % messages.length);
     }, 4000);
@@ -65,6 +72,13 @@ const HomePage = ({ addToCart }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Welcome message if user is logged in */}
+      {userName && (
+        <div className="bg-indigo-600 text-white text-center py-3">
+          <h2 className="text-xl font-semibold">Welcome Back, {userName}!</h2>
+        </div>
+      )}
+
       {showNewsletterPopup && <Newsletterbox mode="popup" closeNewsletter={closeNewsletterPopup} />}
 
       {/* Banner Section */}
