@@ -1,18 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { assets } from '../assets/assets';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const navigate = useNavigate();
+    let hideDropdownTimeout;
 
-    // Navbar items array to simplify links
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        setIsLoggedIn(!!user);
+    }, []);
+
     const navItems = [
         { to: "/", label: "HOME" },
         { to: "/collection", label: "COLLECTION" },
         { to: "/about", label: "ABOUT" },
         { to: "/contact", label: "CONTACT" }
     ];
+
+    const handleLogout = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5174'}/auth/log-out`, {
+                method: 'POST',
+                credentials: 'include',
+            });
+
+            if (response.ok) {
+                localStorage.removeItem('user');
+                setIsLoggedIn(false);
+                navigate('/');  // Redirect to home after logout
+                window.location.reload();  // Force a full page reload to refresh the content
+            } else {
+                console.error('Logout failed');
+            }
+        } catch (error) {
+            console.error('An error occurred during logout:', error);
+        }
+    };
+
+    const handleMouseEnter = () => {
+        setShowDropdown(true);
+        clearTimeout(hideDropdownTimeout);
+    };
+
+    const handleMouseLeave = () => {
+        hideDropdownTimeout = setTimeout(() => {
+            setShowDropdown(false);
+        }, 3000);
+    };
 
     return (
         <div className="relative">
@@ -24,9 +62,7 @@ const Navbar = () => {
                         <Link to="/login" className="text-gray-700 hover:text-indigo-600 transition-colors">Login to Buy</Link>
                         <Link to="/signup" className="text-gray-700 hover:text-indigo-600 transition-colors">Signup</Link>
                     </>
-                ) : (
-                    <Link to="/profile" className="text-gray-700 hover:text-indigo-600 transition-colors">My Profile</Link>
-                )}
+                ) : null}
             </div>
 
             {/* Main Navbar */}
@@ -51,22 +87,29 @@ const Navbar = () => {
                 <div className="flex items-center gap-6">
                     <img src={assets.search_icon} className="w-5 cursor-pointer" alt="Search" />
                     
-                    {/* Profile Dropdown */}
-                    <div className="group relative">
-                        <Link to={isLoggedIn ? '/profile' : '/login'}>
-                            <img className="w-5 cursor-pointer" src={assets.profile_icon} alt="Profile" />
-                        </Link>
-                        {isLoggedIn && (
-                            <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
-                                <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
-                                    <p className="cursor-pointer hover:text-black">My Profile</p>
-                                    <p className="cursor-pointer hover:text-black">Orders</p>
-                                    <p className="cursor-pointer hover:text-black">Logout</p>
+                    {/* Profile Icon with Dropdown - only visible when logged in */}
+                    {isLoggedIn && (
+                        <div 
+                            className="relative group"
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                        >
+                            <Link to="/profile">
+                                <img className="w-5 cursor-pointer" src={assets.profile_icon} alt="Profile" />
+                            </Link>
+                            {showDropdown && (
+                                <div className="absolute right-0 mt-2 w-24 bg-white border rounded shadow-md">
+                                    <button
+                                        onClick={handleLogout}
+                                        className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
+                                    >
+                                        Logout
+                                    </button>
                                 </div>
-                            </div>
-                        )}
-                    </div>
-                    
+                            )}
+                        </div>
+                    )}
+
                     {/* Cart Icon */}
                     <Link to="/cart" className="relative">
                         <img src={assets.cart_icon} className="w-5 min-w-5" alt="Cart" />
