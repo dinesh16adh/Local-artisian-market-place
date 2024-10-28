@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import Cart from './components/Cart';
 import Collection from './components/Collection';
@@ -13,19 +13,10 @@ import Order from './pages/Order';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import NotFoundPage from './components/NotFoundPage';
-import UserProfile from './components/UserProfile';
-
+import UserProfile  from './components/UserProfile';
 const App = () => {
+  // Cart state management
   const [cartItems, setCartItems] = useState([]);
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  // Redirect function
-  useEffect(() => {
-    if (location.pathname === '/Local-artisian-market-place') {
-      navigate('/');
-    }
-  }, [location, navigate]);
 
   // Add item to cart function
   const addToCart = (product) => {
@@ -51,15 +42,16 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/product/:productid" element={<Product />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/signup" element={<Signup />} />        
         <Route path="/place-order" element={<Placeorder />} />
         <Route path="/orders" element={<Order />} />
         <Route path="/profile" element={<UserProfile />} />
-        
+        <Route path="/local-artisian-market-place/" element={<HomePage addToCart={addToCart} />} />
+
         {/* Catch-all route for 404 page */}
         <Route path="*" element={<NotFoundPage />} />        
       </Routes>
-      <Footer />
+      <Footer/>
     </div>
   );
 };
