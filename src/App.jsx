@@ -12,6 +12,7 @@ import Placeorder from './pages/Placeorder';
 import Order from './pages/Order';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import NotFoundPage from './components/NotFoundPage';
 
 const App = () => {
   // Cart state management
@@ -44,6 +45,9 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />        
         <Route path="/place-order" element={<Placeorder />} />
         <Route path="/orders" element={<Order />} />
+
+        {/* Catch-all route for 404 page */}
+        <Route path="*" element={<NotFoundPage />} />        
       </Routes>
       <Footer/>
     </div>
