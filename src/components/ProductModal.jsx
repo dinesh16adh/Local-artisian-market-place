@@ -6,7 +6,7 @@ const ProductModal = ({ product, isOpen, onClose }) => {
 
   if (!isOpen || !product) return null;
 
-  const photos = product.photos || []; // Ensure photos is defined
+  const photos = product.photos || [];
   const hasPhotos = photos.length > 0;
 
   const handleNextImage = () => {
@@ -23,7 +23,6 @@ const ProductModal = ({ product, isOpen, onClose }) => {
     }
   };
 
-  // Update zoom effect based on mouse position
   const handleMouseMove = (e) => {
     const { left, top, width, height } = e.target.getBoundingClientRect();
     const x = Math.min(Math.max(((e.clientX - left) / width) * 100, 25), 75);
@@ -37,6 +36,23 @@ const ProductModal = ({ product, isOpen, onClose }) => {
 
   const handleMouseLeave = () => {
     setZoomStyle({ transform: 'scale(1)' });
+  };
+
+  const renderStars = (rating) => {
+    const filledStars = Math.floor(rating);
+    const halfStar = rating % 1 !== 0;
+    const totalStars = 5;
+    return (
+      <div className="flex items-center mb-2">
+        {[...Array(filledStars)].map((_, i) => (
+          <span key={i} className="text-yellow-400">&#9733;</span>
+        ))}
+        {halfStar && <span className="text-yellow-400">&#9734;</span>}
+        {[...Array(totalStars - filledStars - (halfStar ? 1 : 0))].map((_, i) => (
+          <span key={i} className="text-gray-300">&#9733;</span>
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -56,7 +72,7 @@ const ProductModal = ({ product, isOpen, onClose }) => {
           {hasPhotos ? (
             <img
               src={photos[currentImageIndex].url}
-              alt={`${product.name} - Image ${currentImageIndex + 1}`}
+              alt={`${product.title} - Image ${currentImageIndex + 1}`}
               className="w-full h-64 object-cover rounded-md mb-4"
               style={zoomStyle}
               onMouseMove={handleMouseMove}
@@ -75,12 +91,19 @@ const ProductModal = ({ product, isOpen, onClose }) => {
           )}
         </div>
 
-        <h2 className="text-2xl font-bold mb-2">{product.name}</h2>
-        <p className="text-gray-500 italic mb-2">{product.shortDescription}</p>
+        <h2 className="text-2xl font-bold mb-2">{product.title}</h2>
+        <p className="text-gray-500 italic mb-2">{product.description}</p>
         <p className="text-gray-700 mb-2"><strong>Price:</strong> ${product.price}</p>
-        <p className="text-gray-700 mb-2"><strong>Origin:</strong> {product.origin}</p>
-        <p className="text-gray-700 mb-2"><strong>Materials:</strong> {product.materials}</p>
-        <p className="text-gray-700 mb-4">{product.details}</p>
+
+        {/* Rating Display */}
+        {product.rating && renderStars(product.rating)}
+
+        {/* Stock Display with Conditional Styling */}
+        <p
+          className={`text-sm font-semibold ${product.inStock > 5 ? 'text-green-600' : 'text-red-600'}`}
+        >
+          {product.inStock > 5 ? `In Stock: ${product.inStock}` : 'Low Stock'}
+        </p>
 
         {/* "See All Images" Grid */}
         {hasPhotos && photos.length > 1 && (
@@ -89,7 +112,7 @@ const ProductModal = ({ product, isOpen, onClose }) => {
               <img
                 key={index}
                 src={photo.url}
-                alt={`${product.name} - Thumbnail ${index + 1}`}
+                alt={`${product.title} - Thumbnail ${index + 1}`}
                 className="w-full h-20 object-cover cursor-pointer rounded-md"
                 onClick={() => setCurrentImageIndex(index)}
               />
