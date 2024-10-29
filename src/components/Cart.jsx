@@ -2,20 +2,25 @@ import React from 'react';
 import Footer from './Footer';
 
 const Cart = ({ cartItems }) => {
-  // Group items by id and calculate total quantity and price for each unique item
-  const groupedItems = cartItems.reduce((acc, item) => {
-    const existingItem = acc.find(i => i.id === item.id);
-    if (existingItem) {
+  // Use a Map to group items by id, ensuring each item accumulates quantity and total price
+  const groupedItemsMap = cartItems.reduce((acc, item) => {
+    if (acc.has(item.id)) {
+      // If item already exists, update quantity and total price
+      const existingItem = acc.get(item.id);
       existingItem.quantity += item.quantity;
       existingItem.totalPrice += item.price * item.quantity;
     } else {
-      acc.push({
+      // Add new item with initial quantity and total price
+      acc.set(item.id, {
         ...item,
-        totalPrice: item.price * item.quantity
+        totalPrice: item.price * item.quantity,
       });
     }
     return acc;
-  }, []);
+  }, new Map());
+
+  // Convert grouped items map to an array
+  const groupedItems = Array.from(groupedItemsMap.values());
 
   // Calculate overall cart total
   const cartTotal = groupedItems.reduce((total, item) => total + item.totalPrice, 0);
