@@ -36,8 +36,8 @@ const App = () => {
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       <Navbar />
       <Routes>
-        <Route path="/" element={<Navigate to="/Local-artisan-market-place" replace />} />
-        <Route path="/Local-artisan-market-place" element={<HomePage addToCart={addToCart} />} />
+        <Route path="/" element={<Navigate to="/Local-artisian-market-place" replace />} />
+        <Route path="/Local-artisian-market-place" element={<HomePage addToCart={addToCart} />} />
         <Route path="/cart" element={<Cart cartItems={cartItems} />} />
         <Route path="/collection" element={<Collection addToCart={addToCart} />} />
         <Route path="/about" element={<About />} />
