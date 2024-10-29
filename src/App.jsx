@@ -16,10 +16,8 @@ import NotFoundPage from './components/NotFoundPage';
 import UserProfile from './components/UserProfile';
 
 const App = () => {
-  // Cart state management
   const [cartItems, setCartItems] = useState([]);
 
-  // Add item to cart function
   const addToCart = (product) => {
     setCartItems((prevItems) => {
       const isProductInCart = prevItems.find(item => item.id === product.id);
@@ -32,18 +30,13 @@ const App = () => {
     });
   };
 
-  // Function to calculate total price in the cart
-  const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  };
-
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       <Navbar />
       <Routes>
         <Route path="/" element={<Navigate to="/Local-artisian-market-place" replace />} />
         <Route path="/Local-artisian-market-place" element={<HomePage addToCart={addToCart} />} />
-        <Route path="/cart" element={<Cart cartItems={cartItems} totalPrice={getTotalPrice()} />} />
+        <Route path="/cart" element={<Cart cartItems={cartItems} setCartItems={setCartItems} />} />
         <Route path="/collection" element={<Collection addToCart={addToCart} />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
@@ -53,10 +46,9 @@ const App = () => {
         <Route path="/place-order" element={<Placeorder />} />
         <Route path="/orders" element={<Order />} />
         <Route path="/profile" element={<UserProfile />} />
-        {/* Catch-all route for 404 page */}
         <Route path="*" element={<NotFoundPage />} />        
       </Routes>
-      <Footer />
+      <Footer/>
     </div>
   );
 };
