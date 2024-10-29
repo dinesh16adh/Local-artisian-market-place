@@ -49,7 +49,6 @@ const Collection = ({ addToCart }) => {
     return () => clearInterval(intervalId);
   }, []);
 
-  // Filter and sort products
   const filteredProducts = selectedCategory === 'All'
     ? items
     : items.filter(product => product.category === selectedCategory);
@@ -87,6 +86,23 @@ const Collection = ({ addToCart }) => {
     setSelectedCategory(category);
     setCurrentPage(1);
     setShowSidebar(false); // Hide sidebar after selecting a category
+  };
+
+  const renderStars = (rating) => {
+    const filledStars = Math.floor(rating);
+    const halfStar = rating % 1 !== 0;
+    const totalStars = 5;
+    return (
+      <div className="flex items-center mb-2">
+        {[...Array(filledStars)].map((_, i) => (
+          <span key={i} className="text-yellow-400">&#9733;</span>
+        ))}
+        {halfStar && <span className="text-yellow-400">&#9734;</span>}
+        {[...Array(totalStars - filledStars - (halfStar ? 1 : 0))].map((_, i) => (
+          <span key={i} className="text-gray-300">&#9733;</span>
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -212,9 +228,22 @@ const Collection = ({ addToCart }) => {
                 <h3 className="font-bold text-xl mb-2 text-gray-800">{product.title}</h3>
                 <p className="text-gray-600 mb-2 text-sm">{product.description}</p>
                 <p className="text-gray-800 font-semibold mb-4">Price: ${product.price}</p>
+
+                {/* Rating Display */}
+                {product.rating && renderStars(product.rating)}
+
+                {/* Stock Display with Conditional Styling */}
+                <p
+                  className={`text-sm font-semibold ${
+                    product.inStock > 5 ? 'text-green-600' : 'text-red-600'
+                  }`}
+                >
+                  {product.inStock > 5 ? `In Stock: ${product.inStock}` : 'Low Stock'}
+                </p>
+
                 <button
                   onClick={(e) => handleAddToCart(product, e)}
-                  className="w-full py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-500 transition-colors"
+                  className="w-full py-2 mt-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-500 transition-colors"
                 >
                   Add to Cart
                 </button>
