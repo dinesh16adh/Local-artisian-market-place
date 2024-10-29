@@ -8,7 +8,7 @@ import Contact from './components/Contact';
 import Product from './pages/Product';
 import Login from './components/Login';
 import Signup from './components/SignUp';
-import Placeorder from './pages/Placeorder';
+import PlaceOrder from './components/PlaceOrder';
 import Order from './pages/Order';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -43,7 +43,7 @@ const App = () => {
         <Route path="/product/:productid" element={<Product />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />        
-        <Route path="/place-order" element={<Placeorder />} />
+        <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/orders" element={<Order />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="*" element={<NotFoundPage />} />        
