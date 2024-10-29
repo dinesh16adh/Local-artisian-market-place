@@ -1,14 +1,12 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // For navigation
+import { useNavigate } from 'react-router-dom';
 import Footer from './Footer';
 
 const Cart = ({ cartItems, setCartItems }) => {
   const navigate = useNavigate();
 
-  // Calculate total price by summing up each item's subtotal
   const cartTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
-  // Increase item quantity
   const increaseQuantity = (itemId) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
@@ -17,23 +15,20 @@ const Cart = ({ cartItems, setCartItems }) => {
     );
   };
 
-  // Decrease item quantity, and remove if quantity is 1
   const decreaseQuantity = (itemId) => {
     setCartItems((prevItems) =>
       prevItems
         .map((item) =>
           item.id === itemId ? { ...item, quantity: item.quantity - 1 } : item
         )
-        .filter((item) => item.quantity > 0) // Remove item if quantity reaches 0
+        .filter((item) => item.quantity > 0)
     );
   };
 
-  // Remove item from cart
   const removeItem = (itemId) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
   };
 
-  // Handle navigation to payment page
   const handlePayment = () => {
     navigate('/place-order');
   };
@@ -85,7 +80,6 @@ const Cart = ({ cartItems, setCartItems }) => {
               </div>
             </div>
           ))}
-          {/* Display overall cart total */}
           <div className="text-right mt-6">
             <h3 className="text-2xl font-bold text-gray-800">
               Cart Total: ${cartTotal.toFixed(2)}
@@ -94,7 +88,6 @@ const Cart = ({ cartItems, setCartItems }) => {
         </div>
       )}
 
-      {/* Pay Now Button */}
       {cartItems.length > 0 && (
         <div className="text-right mt-6">
           <button
