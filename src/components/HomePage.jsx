@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { assets} from '../assets/assets';
 import { Link } from 'react-router-dom';
 import CartModal from './CartModal';
 import ProductModal from './ProductModal';
@@ -102,7 +103,7 @@ const HomePage = ({ addToCart }) => {
       {/* Banner Section */}
       <div
         className="relative w-full h-80 bg-cover bg-center flex items-center justify-center"
-        style={{ backgroundImage: `url(./assets/banner.jpg)` }}
+        style={{ backgroundImage: `url(${assets.banner})` }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-800 to-transparent opacity-70"></div>
         <div className="relative z-10 text-center px-6 md:px-20">
