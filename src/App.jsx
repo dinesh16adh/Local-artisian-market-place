@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import Cart from './components/Cart';
 import Collection from './components/Collection';
@@ -13,7 +13,8 @@ import Order from './pages/Order';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import NotFoundPage from './components/NotFoundPage';
-import UserProfile  from './components/UserProfile';
+import UserProfile from './components/UserProfile';
+
 const App = () => {
   // Cart state management
   const [cartItems, setCartItems] = useState([]);
@@ -35,7 +36,8 @@ const App = () => {
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       <Navbar />
       <Routes>
-        <Route path="/" element={<HomePage addToCart={addToCart} />} />
+        <Route path="/" element={<Navigate to="/Local-artisan-market-place" replace />} />
+        <Route path="/Local-artisan-market-place" element={<HomePage addToCart={addToCart} />} />
         <Route path="/cart" element={<Cart cartItems={cartItems} />} />
         <Route path="/collection" element={<Collection addToCart={addToCart} />} />
         <Route path="/about" element={<About />} />
@@ -46,8 +48,6 @@ const App = () => {
         <Route path="/place-order" element={<Placeorder />} />
         <Route path="/orders" element={<Order />} />
         <Route path="/profile" element={<UserProfile />} />
-        <Route path="/local-artisian-market-place/" element={<HomePage addToCart={addToCart} />} />
-
         {/* Catch-all route for 404 page */}
         <Route path="*" element={<NotFoundPage />} />        
       </Routes>
