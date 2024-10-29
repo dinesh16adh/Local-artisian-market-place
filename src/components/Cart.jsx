@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Footer from './Footer';
 
 const Cart = ({ cartItems, setCartItems }) => {
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
+
+  // Check if user is logged in
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    setUser(storedUser);
+  }, []);
 
   const cartTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
@@ -30,7 +37,11 @@ const Cart = ({ cartItems, setCartItems }) => {
   };
 
   const handlePayment = () => {
-    navigate('/place-order');
+    if (!user) {
+      navigate('/login', { state: { fromCart: true } }); // Redirect to login with 'fromCart' flag
+    } else {
+      navigate('/place-order');
+    }
   };
 
   return (
