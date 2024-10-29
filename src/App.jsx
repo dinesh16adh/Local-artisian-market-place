@@ -19,7 +19,6 @@ const App = () => {
   const [cartItems, setCartItems] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Track login status from localStorage
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     setIsLoggedIn(!!storedUser);
@@ -41,22 +40,21 @@ const App = () => {
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       <Navbar />
       <Routes>
-        <Route path="/" element={<Navigate to="/Local-artisian-market-place" replace />} />
-        <Route path="/Local-artisian-market-place" element={<HomePage addToCart={addToCart} />} />
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/home" element={<HomePage addToCart={addToCart} />} />
         <Route path="/cart" element={<Cart cartItems={cartItems} setCartItems={setCartItems} />} />
         <Route path="/collection" element={<Collection addToCart={addToCart} />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/product/:productid" element={<Product />} />
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-        <Route path="/signup" element={<Signup />} />        
-        {/* Conditionally Render PlaceOrder Page */}
+        <Route path="/signup" element={<Signup />} />
         <Route path="/place-order" element={isLoggedIn ? <PlaceOrder cartItems={cartItems} /> : <Navigate to="/login" />} />
         <Route path="/orders" element={<Order />} />
         <Route path="/profile" element={<UserProfile />} />
-        <Route path="*" element={<NotFoundPage />} />        
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
