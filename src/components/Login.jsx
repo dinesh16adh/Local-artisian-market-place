@@ -1,44 +1,50 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import bcrypt from 'bcryptjs';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-const Login = () => {
+const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5174';
+
+const Login = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await fetch('https://artisan.ashwink.com.np/users/allUsers');
+      const response = await fetch(`${backendUrl}/auth/log-in`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Unexpected response from server');
+      }
+      
       if (!response.ok) {
-        throw new Error(`Failed to fetch: ${response.statusText}`);
+        throw new Error('Login failed. Please check your credentials.');
       }
-
+      
       const data = await response.json();
-      const users = Array.isArray(data) ? data : data?.users;
+      const { user } = data;
+      localStorage.setItem('user', JSON.stringify({ id: user.id, fullName: user.username, email: user.email }));
 
-      if (!Array.isArray(users)) {
-        throw new Error("Unexpected response format: users data is not an array");
-      }
+      setIsLoggedIn(true); // Set logged-in status in App
 
-      const user = users.find((user) => user.email === email);
-
-      if (user) {
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        if (passwordMatch) {
-          navigate('/'); // Redirect on successful login
-        } else {
-          setError('Invalid email or password');
-        }
+      // Conditionally show PlaceOrder page if coming from cart
+      if (location.state?.fromCart) {
+        navigate('/place-order');
       } else {
-        setError('Invalid email or password');
+        navigate('/');  // Redirect to home after login
+        window.location.reload();  // Force a full page reload to refresh the content
       }
     } catch (err) {
-      console.error('Error fetching users:', err);
-      setError('Something went wrong. Please try again later.');
+      setError(err.message);
     }
   };
 
@@ -46,7 +52,7 @@ const Login = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="p-8 bg-white rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Login</h2>
-
+        
         <form onSubmit={handleSubmit}>
           <label className="block text-gray-600 mb-2">Email</label>
           <input
@@ -57,7 +63,7 @@ const Login = () => {
             placeholder="Enter your email"
             required
           />
-
+          
           <label className="block text-gray-600 mb-2">Password</label>
           <input
             type="password"
@@ -67,9 +73,9 @@ const Login = () => {
             placeholder="Enter your password"
             required
           />
-
+          
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-
+          
           <button
             type="submit"
             className="w-full py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-500 transition-colors"
@@ -77,7 +83,7 @@ const Login = () => {
             Log In
           </button>
         </form>
-
+        
         <p className="text-gray-500 text-sm mt-4 text-center">
           Don’t have an account? <Link to="/signup" className="text-indigo-600 hover:underline">Sign up</Link>
         </p>

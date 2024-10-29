@@ -1,66 +1,50 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5174';
+
 const Signup = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState(null);
-  const navigate = useNavigate(); // For redirecting after signup
+  const [error, setError] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Simple client-side validation
+    // Validate password and confirm password match
     if (password !== confirmPassword) {
-      setError("Passwords do not match!");
+      setError("Passwords do not match");
       return;
     }
 
-    const userData = {
-      username,
-      email,
-      password,
-    };
-   
     try {
-      const response = await fetch('https://artisan.ashwink.com.np/auth/sign-up', {
+      const response = await fetch(`${backendUrl}/auth/sign-up`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userData),
+        body: JSON.stringify({ username, email, password }),
       });
 
-      console.log('Response status:', response.status);
-      
-      const textResponse = await response.text(); // Read the response as text
-      console.log('Response body:', textResponse); // Log the response body
-
-      // Check if the response is okay
       if (!response.ok) {
-        const contentType = response.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          // const data = JSON.parse(textResponse); // Attempt to parse JSON
-          console.error('Error response:', data);
-          throw new Error(data.message || 'Network response was not ok');
-        } else {
-          // Check for specific SQLite unique constraint error in response body
-          if (textResponse.includes('UNIQUE constraint failed: User.email')) {
-            throw new Error('Email already exists. Please use a different email address.');
-          }
-          console.error('Error response:', textResponse);
-          throw new Error('Received non-JSON response');
-        }
+        throw new Error('Signup failed. Please try again.');
       }
 
-      // If successful, navigate to login
-      navigate('/login'); // Redirect to login or any other page
+      const data = await response.json();
+      console.log('Signup successful:', data);
 
-    } catch (error) {
-      console.error('Error during signup:', error);
-      setError(error.message || "Signup failed. Please try again.");
+      // Show success message and reset form fields
+      setShowSuccess(true);
+      setUsername('');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setError('');
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -106,6 +90,7 @@ const Signup = () => {
             placeholder="Confirm your password"
             required
           />
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
           <button
             type="submit"
             className="w-full py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-500 transition-colors"
@@ -117,6 +102,23 @@ const Signup = () => {
           Already have an account? <Link to="/login" className="text-indigo-600 hover:underline">Log in</Link>
         </p>
       </div>
+
+      {/* Success Modal */}
+      {showSuccess && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full text-center">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">User created successfully!</h3>
+            <p className="text-gray-600 mb-4">Please go to the login page to log in.</p>
+            <Link to="/login" className="text-indigo-600 hover:underline font-medium">Go to Login</Link>
+            <button
+              onClick={() => setShowSuccess(false)}
+              className="mt-4 py-2 px-4 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-500 transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
