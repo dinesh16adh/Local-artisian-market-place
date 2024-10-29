@@ -40,7 +40,7 @@ const Login = ({ setIsLoggedIn }) => {
       if (location.state?.fromCart) {
         navigate('/place-order');
       } else {
-        navigate('/Local-artisian-market-place');  // Redirect to home after login
+        navigate('/');  // Redirect to home after login
         window.location.reload();  // Force a full page reload to refresh the content
       }
     } catch (err) {
