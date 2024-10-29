@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import Cart from './components/Cart';
@@ -17,6 +17,13 @@ import UserProfile from './components/UserProfile';
 
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Track login status from localStorage
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    setIsLoggedIn(!!storedUser);
+  }, []);
 
   const addToCart = (product) => {
     setCartItems((prevItems) => {
@@ -41,12 +48,10 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/product/:productid" element={<Product />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/signup" element={<Signup />} />        
-        <Route 
-          path="/place-order" 
-          element={<PlaceOrder cartItems={cartItems} setCartItems={setCartItems} />} 
-        />
+        {/* Conditionally Render PlaceOrder Page */}
+        <Route path="/place-order" element={isLoggedIn ? <PlaceOrder cartItems={cartItems} /> : <Navigate to="/login" />} />
         <Route path="/orders" element={<Order />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="*" element={<NotFoundPage />} />        
