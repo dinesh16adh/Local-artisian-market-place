@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5174';
 
@@ -8,6 +8,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,9 +37,10 @@ const Login = () => {
       const { user } = data;
       localStorage.setItem('user', JSON.stringify({ id: user.id, fullName: user.username, email: user.email }));
 
-      // Redirect to homepage and reload to refresh data
-      navigate('/');
-      window.location.reload();  // Forces a reload to refresh the homepage
+      // Check if the user was redirected from the cart page
+      const redirectPath = location.state?.fromCart ? '/place-order' : '/';
+      navigate(redirectPath);
+      window.location.reload();  // Forces a reload to refresh the homepage or redirected page
     } catch (err) {
       setError(err.message);
     }
