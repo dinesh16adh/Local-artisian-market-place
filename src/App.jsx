@@ -22,14 +22,19 @@ const App = () => {
   // Add item to cart function
   const addToCart = (product) => {
     setCartItems((prevItems) => {
-      const isProductInCart = prevItems.find(item => item._id === product._id);
+      const isProductInCart = prevItems.find(item => item.id === product.id);
       if (isProductInCart) {
         return prevItems.map(item =>
-          item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
       return [...prevItems, { ...product, quantity: 1 }];
     });
+  };
+
+  // Function to calculate total price in the cart
+  const getTotalPrice = () => {
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
   return (
@@ -38,7 +43,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Navigate to="/Local-artisian-market-place" replace />} />
         <Route path="/Local-artisian-market-place" element={<HomePage addToCart={addToCart} />} />
-        <Route path="/cart" element={<Cart cartItems={cartItems} />} />
+        <Route path="/cart" element={<Cart cartItems={cartItems} totalPrice={getTotalPrice()} />} />
         <Route path="/collection" element={<Collection addToCart={addToCart} />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
@@ -51,7 +56,7 @@ const App = () => {
         {/* Catch-all route for 404 page */}
         <Route path="*" element={<NotFoundPage />} />        
       </Routes>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
