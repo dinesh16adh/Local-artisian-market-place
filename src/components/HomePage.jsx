@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { assets} from '../assets/assets';
+import { assets } from '../assets/assets';
 import { Link } from 'react-router-dom';
 import CartModal from './CartModal';
 import ProductModal from './ProductModal';
