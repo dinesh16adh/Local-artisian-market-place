@@ -26,7 +26,6 @@ const HomePage = ({ addToCart }) => {
     "Explore handmade crafts, cultural artifacts, and more from Nepal."
   ];
 
-  // Fetch items and categories from backend
   useEffect(() => {
     const fetchItemsAndCategories = async () => {
       try {
@@ -90,6 +89,23 @@ const HomePage = ({ addToCart }) => {
   const limitedCategories = categories.slice(0, 5);
   const hasMoreCategories = categories.length > 5;
 
+  const renderStars = (rating) => {
+    const filledStars = Math.floor(rating);
+    const halfStar = rating % 1 !== 0;
+    const totalStars = 5;
+    return (
+      <div className="flex items-center mb-2">
+        {[...Array(filledStars)].map((_, i) => (
+          <span key={i} className="text-yellow-400">&#9733;</span>
+        ))}
+        {halfStar && <span className="text-yellow-400">&#9734;</span>}
+        {[...Array(totalStars - filledStars - (halfStar ? 1 : 0))].map((_, i) => (
+          <span key={i} className="text-gray-300">&#9733;</span>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {userName && (
@@ -152,7 +168,18 @@ const HomePage = ({ addToCart }) => {
             <div className="p-5">
               <h3 className="font-bold text-xl mb-2">{product.title}</h3>
               <p className="text-gray-600 text-sm mb-2">{product.description}</p>
-              <p className="text-gray-800 font-semibold mb-4">Price: ${product.price}</p>
+              <p className="text-gray-800 font-semibold mb-2">Price: ${product.price}</p>
+              
+              {/* Rating Display */}
+              {product.rating && renderStars(product.rating)}
+
+              {/* Stock Display with Conditional Styling */}
+              <p
+                className={`text-sm font-semibold ${product.inStock > 5 ? 'text-green-600' : 'text-red-600'}`}
+              >
+                {product.inStock > 5 ? `In Stock: ${product.inStock}` : 'Low Stock'}
+              </p>
+
               <button
                 onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}
                 className="mt-2 w-full bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-500 transition-colors"
