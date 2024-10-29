@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { assets, products } from '../assets/assets';
 import { Link } from 'react-router-dom';
 import CartModal from './CartModal';
 import ProductModal from './ProductModal';
-import Hero from './Hero';
-import Ourpolicies from './Ourpolicies';
 import Newsletterbox from './Newsletterbox';
 import ProductSlider from './ProductSlider';
+import Ourpolicies from './Ourpolicies';
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5174';
 
 const HomePage = ({ addToCart }) => {
-  const [visibleProducts, setVisibleProducts] = useState(12); 
+  const [items, setItems] = useState([]);
+  const [categories, setCategories] = useState(['All']);
+  const [visibleProducts, setVisibleProducts] = useState(12);
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [showModal, setShowModal] = useState(false);
-  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showNewsletterPopup, setShowNewsletterPopup] = useState(false);
-  const [userName, setUserName] = useState(null); // State for the user's name
+  const [userName, setUserName] = useState(null);
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
 
   const messages = [
     "Find Nepali local homemade products, arts, and more in one place.",
@@ -23,8 +25,26 @@ const HomePage = ({ addToCart }) => {
     "Explore handmade crafts, cultural artifacts, and more from Nepal."
   ];
 
+  // Fetch items and categories from backend
   useEffect(() => {
-    // Check if the user is logged in and retrieve their name
+    const fetchItemsAndCategories = async () => {
+      try {
+        const itemsResponse = await fetch(`${backendUrl}/items`);
+        const itemsData = await itemsResponse.json();
+        setItems(itemsData.items || []);
+        
+        const categoriesResponse = await fetch(`${backendUrl}/categories`);
+        const categoriesData = await categoriesResponse.json();
+        setCategories(['All', ...categoriesData]);
+      } catch (error) {
+        console.error("Error fetching items or categories:", error);
+      }
+    };
+
+    fetchItemsAndCategories();
+  }, []);
+
+  useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser && storedUser.fullName) {
       setUserName(storedUser.fullName);
@@ -46,8 +66,8 @@ const HomePage = ({ addToCart }) => {
   }, []);
 
   const filteredProducts = categoryFilter === 'All' 
-    ? products 
-    : products.filter(product => product.category === categoryFilter);
+    ? items 
+    : items.filter(item => item.category === categoryFilter);
 
   const handleAddToCart = (product) => {
     addToCart(product);
@@ -66,13 +86,11 @@ const HomePage = ({ addToCart }) => {
     setShowNewsletterPopup(false);
   };
 
-  const categories = ['All', ...new Set(products.map(product => product.category))];
   const limitedCategories = categories.slice(0, 5);
   const hasMoreCategories = categories.length > 5;
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Welcome message if user is logged in */}
       {userName && (
         <div className="bg-indigo-600 text-white text-center py-3">
           <h2 className="text-xl font-semibold">Welcome Back, {userName}!</h2>
@@ -84,7 +102,7 @@ const HomePage = ({ addToCart }) => {
       {/* Banner Section */}
       <div
         className="relative w-full h-80 bg-cover bg-center flex items-center justify-center"
-        style={{ backgroundImage: `url(${assets.banner})` }}
+        style={{ backgroundImage: `url(${backendUrl}/assets/banner.jpg)` }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-800 to-transparent opacity-70"></div>
         <div className="relative z-10 text-center px-6 md:px-20">
@@ -125,14 +143,13 @@ const HomePage = ({ addToCart }) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4 md:p-10">
         {filteredProducts.slice(0, visibleProducts).map((product) => (
           <div 
-            key={product._id} 
+            key={product.id} 
             className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300 transform hover:scale-105"
             onClick={() => handleProductClick(product)}
           >
-            {/* Use ProductSlider for multiple images */}
-            <ProductSlider images={product.Image} />
+            <ProductSlider images={product.photos.map(photo => photo.url)} />
             <div className="p-5">
-              <h3 className="font-bold text-xl mb-2">{product.name}</h3>
+              <h3 className="font-bold text-xl mb-2">{product.title}</h3>
               <p className="text-gray-600 text-sm mb-2">{product.description}</p>
               <p className="text-gray-800 font-semibold mb-4">Price: ${product.price}</p>
               <button
@@ -146,7 +163,6 @@ const HomePage = ({ addToCart }) => {
         ))}
       </div>
 
-      {/* "See More" Button */}
       {visibleProducts < filteredProducts.length && (
         <div className="flex justify-center my-6">
           <Link
@@ -158,12 +174,8 @@ const HomePage = ({ addToCart }) => {
         </div>
       )}
 
-      {/* Product Details Modal */}
       <ProductModal product={selectedProduct} isOpen={!!selectedProduct} onClose={handleCloseModal} />
-
-      {/* Cart Confirmation Modal */}
       <CartModal showModal={showModal} setShowModal={setShowModal} />
-
       <Ourpolicies />
     </div>
   );
