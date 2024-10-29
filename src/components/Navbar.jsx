@@ -41,6 +41,12 @@ const Navbar = () => {
         }
     };
 
+    const handleHomeClick = (e) => {
+        e.preventDefault();  // Prevents default link behavior
+        navigate('/');
+        window.location.reload();  // Forces a full page reload to refresh content
+    };
+
     const handleMouseEnter = () => {
         setShowDropdown(true);
         clearTimeout(hideDropdownTimeout);
@@ -69,14 +75,19 @@ const Navbar = () => {
             <div className="flex items-center justify-between py-5 px-4 font-medium">
                 
                 {/* Logo */}
-                <Link to="/" className="flex-shrink-0">
+                <Link to="/" onClick={handleHomeClick} className="flex-shrink-0">
                     <img src={assets.logo} className="w-36 cursor-pointer" alt="Logo" />
                 </Link>
 
                 {/* Desktop Navigation Links */}
                 <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
                     {navItems.map((item) => (
-                        <NavLink key={item.to} to={item.to} className="flex flex-col items-center gap-1">
+                        <NavLink 
+                            key={item.to} 
+                            to={item.to} 
+                            onClick={item.to === "/" ? handleHomeClick : undefined} 
+                            className="flex flex-col items-center gap-1"
+                        >
                             <p>{item.label}</p>
                             <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
                         </NavLink>
