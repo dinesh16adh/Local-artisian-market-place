@@ -4,6 +4,7 @@ import Footer from './Footer';
 
 const Cart = ({ cartItems, setCartItems }) => {
   const [user, setUser] = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false); // State to control modal visibility
   const navigate = useNavigate();
 
   // Check if user is logged in
@@ -38,7 +39,7 @@ const Cart = ({ cartItems, setCartItems }) => {
 
   const handlePayment = () => {
     if (!user) {
-      navigate('/login', { state: { fromCart: true } }); // Redirect to login with 'fromCart' flag
+      setShowLoginModal(true); // Show modal if user is not logged in
     } else {
       navigate('/place-order');
     }
@@ -107,6 +108,29 @@ const Cart = ({ cartItems, setCartItems }) => {
           >
             Pay Now
           </button>
+        </div>
+      )}
+
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h3 className="text-xl font-semibold mb-4">You must log in to proceed to payment</h3>
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={() => setShowLoginModal(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition-colors"
+              >
+                Close
+              </button>
+              <button
+                onClick={() => navigate('/login', { state: { fromCart: true } })}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-500 transition-colors"
+              >
+                Go to Login
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
