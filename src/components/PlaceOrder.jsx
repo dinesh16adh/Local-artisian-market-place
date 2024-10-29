@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5174';
 
-const PlaceOrder = ({ cartItems, setCartItems }) => {
+const PlaceOrder = ({ cartItems = [], setCartItems }) => {
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
 
@@ -37,8 +37,8 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
           body: JSON.stringify({ id: item.id, quantity: item.quantity }),
         });
       }
-      setCartItems([]);
-      navigate('/orders');
+      setCartItems([]); // Clear the cart after purchase
+      navigate('/orders'); // Navigate to orders page
     } catch (error) {
       console.error("Failed to update stock:", error);
     }
