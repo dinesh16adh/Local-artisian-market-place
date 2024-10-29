@@ -70,9 +70,25 @@ const HomePage = ({ addToCart }) => {
     : items.filter(item => item.category === categoryFilter);
 
   const handleAddToCart = (product) => {
-    addToCart(product);
+    // Check if item already exists in cart by its id
+    setCartItems((prevCartItems) => {
+      const existingCartItemIndex = prevCartItems.findIndex((item) => item.id === product.id);
+  
+      if (existingCartItemIndex >= 0) {
+        // If item exists, update its quantity
+        const updatedCartItems = [...prevCartItems];
+        updatedCartItems[existingCartItemIndex].quantity += 1;
+        return updatedCartItems;
+      } else {
+        // If item doesn't exist, add it to the cart with initial quantity 1
+        return [...prevCartItems, { ...product, quantity: 1 }];
+      }
+    });
+  
+    // Show cart modal after adding
     setShowModal(true);
   };
+    
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
