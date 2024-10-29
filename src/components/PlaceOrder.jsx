@@ -16,7 +16,7 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
 
   // Total and delivery fee calculations
   const itemsTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  const deliveryFee = 125;
+  const deliveryFee = 1.25; // Updated to dollar equivalent
   const grandTotal = itemsTotal + deliveryFee;
 
   // Handle Pay Now button click
@@ -25,8 +25,8 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
       setShowLoginModal(true);
     } else {
       alert('Proceeding with payment...');
-      // Proceed with payment logic
-      // Update stock, clear cart, etc.
+      // need to addd  payment logic
+      // ned to add logic for Update stock, clear cart, etc.
     }
   };
 
@@ -47,6 +47,7 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
           EDIT
         </button>
         <p>{user?.fullName || 'Guest'}</p>
+        <p>{user?.email || 'No email provided'}</p>
         <p>{user?.address || 'No address available'}</p>
       </div>
 
@@ -56,20 +57,20 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
         {cartItems.map((item, index) => (
           <div key={index} className="flex justify-between items-center border-b py-3">
             <span>{item.title} x {item.quantity}</span>
-            <span>Rs. {(item.price * item.quantity).toFixed(2)}</span>
+            <span>${(item.price * item.quantity).toFixed(2)}</span>
           </div>
         ))}
         <div className="flex justify-between items-center mt-4 font-bold">
           <span>Items Total</span>
-          <span>Rs. {itemsTotal.toFixed(2)}</span>
+          <span>${itemsTotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between items-center mt-1">
           <span>Delivery Fee</span>
-          <span>Rs. {deliveryFee.toFixed(2)}</span>
+          <span>${deliveryFee.toFixed(2)}</span>
         </div>
         <div className="flex justify-between items-center mt-4 text-lg font-bold">
           <span>Total</span>
-          <span>Rs. {grandTotal.toFixed(2)}</span>
+          <span>${grandTotal.toFixed(2)}</span>
         </div>
       </div>
 
