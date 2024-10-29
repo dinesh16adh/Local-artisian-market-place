@@ -7,7 +7,7 @@ import About from './components/AboutUs';
 import Contact from './components/Contact';
 import Product from './pages/Product';
 import Login from './components/Login';
-import Signup from './components/SignUp';
+import Signup from './components/Signup';
 import Placeorder from './pages/Placeorder';
 import Order from './pages/Order';
 import Navbar from './components/Navbar';

@@ -56,7 +56,6 @@ const Signup = () => {
       }
 
       // If successful, navigate to login
-      
       navigate('/login'); // Redirect to login or any other page
 
     } catch (error) {
