@@ -7,15 +7,15 @@ const ProductModal = ({ product, isOpen, onClose }) => {
   if (!isOpen || !product) return null;
 
   const handleNextImage = () => {
-    if (product.Image.length > 1) {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % product.Image.length);
+    if (product.photos.length > 1) {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % product.photos.length);
     }
   };
 
   const handlePrevImage = () => {
-    if (product.Image.length > 1) {
+    if (product.photos.length > 1) {
       setCurrentImageIndex((prevIndex) =>
-        prevIndex === 0 ? product.Image.length - 1 : prevIndex - 1
+        prevIndex === 0 ? product.photos.length - 1 : prevIndex - 1
       );
     }
   };
@@ -51,14 +51,14 @@ const ProductModal = ({ product, isOpen, onClose }) => {
         {/* Image Gallery Slider with Zoom Effect */}
         <div className="relative">
           <img
-            src={product.Image[currentImageIndex]}
+            src={product.photos[currentImageIndex].url}
             alt={`${product.name} - Image ${currentImageIndex + 1}`}
             className="w-full h-64 object-cover rounded-md mb-4"
             style={zoomStyle}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           />
-          {product.Image.length > 1 && (
+          {product.photos.length > 1 && (
             <div className="absolute inset-0 flex justify-between items-center px-2 z-10">
               <button onClick={handlePrevImage} className="text-gray-700 bg-white bg-opacity-70 rounded-full p-2">‹</button>
               <button onClick={handleNextImage} className="text-gray-700 bg-white bg-opacity-70 rounded-full p-2">›</button>
@@ -74,12 +74,12 @@ const ProductModal = ({ product, isOpen, onClose }) => {
         <p className="text-gray-700 mb-4">{product.details}</p>
 
         {/* "See All Images" Grid */}
-        {product.Image.length > 1 && (
+        {product.photos.length > 1 && (
           <div className="grid grid-cols-3 gap-2 mt-4">
-            {product.Image.map((img, index) => (
+            {product.photos.map((photo, index) => (
               <img
                 key={index}
-                src={img}
+                src={photo.url}
                 alt={`${product.name} - Thumbnail ${index + 1}`}
                 className="w-full h-20 object-cover cursor-pointer rounded-md"
                 onClick={() => setCurrentImageIndex(index)}
