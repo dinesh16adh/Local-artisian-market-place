@@ -19,7 +19,6 @@ const Collection = ({ addToCart }) => {
   const productsPerPage = 12;
   const categoriesPerPage = 15;
 
-  // Fetch items and categories from backend
   useEffect(() => {
     const fetchItemsAndCategories = async () => {
       try {
@@ -39,7 +38,7 @@ const Collection = ({ addToCart }) => {
   }, []);
 
   useEffect(() => {
-    window.scrollTo(0, 0); // Scroll to top when component mounts
+    window.scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
@@ -85,7 +84,7 @@ const Collection = ({ addToCart }) => {
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     setCurrentPage(1);
-    setShowSidebar(false); // Hide sidebar after selecting a category
+    setShowSidebar(false);
   };
 
   const renderStars = (rating) => {
@@ -107,7 +106,6 @@ const Collection = ({ addToCart }) => {
 
   return (
     <div className="flex flex-col md:flex-row p-6 bg-gray-50 min-h-screen">
-      {/* Button to Toggle Sidebar on Smaller Screens */}
       <button
         onClick={() => setShowSidebar(!showSidebar)}
         className="fixed top-4 right-4 z-50 p-2 bg-indigo-600 text-white rounded-full shadow-md text-xs md:text-sm md:hidden"
@@ -115,7 +113,6 @@ const Collection = ({ addToCart }) => {
         {showSidebar ? 'Close' : 'Categories'}
       </button>
 
-      {/* Sidebar - Fullscreen on Small Screens */}
       {showSidebar && (
         <div className="fixed inset-0 bg-white z-40 flex flex-col p-4 overflow-y-auto md:hidden">
           <h2 className="text-lg font-semibold mb-4 text-gray-700">Categories</h2>
@@ -158,7 +155,6 @@ const Collection = ({ addToCart }) => {
         </div>
       )}
 
-      {/* Sidebar for Larger Screens */}
       <div className={`w-full md:w-1/4 mb-6 md:mb-0 pr-4 hidden md:flex flex-col h-full bg-white`}>
         <h2 className="text-2xl font-semibold mb-4 text-gray-700">Categories</h2>
         <ul className="space-y-3">
@@ -199,7 +195,6 @@ const Collection = ({ addToCart }) => {
         </div>
       </div>
 
-      {/* Product Display */}
       <div className="w-full md:w-3/4 ml-0 md:ml-1/4">
         <div className="flex justify-end items-center mb-4">
           <select
@@ -229,10 +224,8 @@ const Collection = ({ addToCart }) => {
                 <p className="text-gray-600 mb-2 text-sm">{product.description}</p>
                 <p className="text-gray-800 font-semibold mb-4">Price: ${product.price}</p>
 
-                {/* Rating Display */}
                 {product.rating && renderStars(product.rating)}
 
-                {/* Stock Display with Conditional Styling */}
                 <p
                   className={`text-sm font-semibold ${
                     product.inStock > 5 ? 'text-green-600' : 'text-red-600'
