@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5174';
 
-const Login = () => {
+const Login = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -31,16 +31,17 @@ const Login = () => {
       }
       
       const data = await response.json();
-      console.log('Login successful:', data);
-
-      // Store user session info in localStorage
       const { user } = data;
       localStorage.setItem('user', JSON.stringify({ id: user.id, fullName: user.username, email: user.email }));
 
-      // Check if the user was redirected from the cart page
-      const redirectPath = location.state?.fromCart ? '/place-order' : '/';
-      navigate(redirectPath);
-      window.location.reload();  // Forces a reload to refresh the homepage or redirected page
+      setIsLoggedIn(true); // Set logged-in status in App
+
+      // Conditionally show PlaceOrder page if coming from cart
+      if (location.state?.fromCart) {
+        navigate('/place-order');
+      } else {
+        navigate('/');
+      }
     } catch (err) {
       setError(err.message);
     }
