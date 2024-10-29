@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import bcrypt from 'bcryptjs';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5174';
 
@@ -52,7 +53,7 @@ const Login = ({ setIsLoggedIn }) => {
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
       <div className="p-8 bg-white rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Login</h2>
-        
+
         <form onSubmit={handleSubmit}>
           <label className="block text-gray-600 mb-2">Email</label>
           <input
@@ -63,7 +64,7 @@ const Login = ({ setIsLoggedIn }) => {
             placeholder="Enter your email"
             required
           />
-          
+
           <label className="block text-gray-600 mb-2">Password</label>
           <input
             type="password"
@@ -83,7 +84,7 @@ const Login = ({ setIsLoggedIn }) => {
             Log In
           </button>
         </form>
-        
+
         <p className="text-gray-500 text-sm mt-4 text-center">
           Don’t have an account? <Link to="/signup" className="text-indigo-600 hover:underline">Sign up</Link>
         </p>
