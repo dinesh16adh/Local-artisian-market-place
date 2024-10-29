@@ -43,7 +43,7 @@ const Navbar = () => {
 
     const handleHomeClick = (e) => {
         e.preventDefault();  // Prevents default link behavior
-        navigate('/');
+        navigate('/Local-artisian-market-place');
         window.location.reload();  // Forces a full page reload to refresh content
     };
 
@@ -60,7 +60,6 @@ const Navbar = () => {
 
     return (
         <div className="relative">
-
             {/* Top Right Links for Login and Signup */}
             <div className="absolute top-6 right-4 flex gap-4 text-sm">
                 {!isLoggedIn ? (
