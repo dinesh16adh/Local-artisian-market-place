@@ -31,7 +31,7 @@ const Navbar = () => {
             if (response.ok) {
                 localStorage.removeItem('user');
                 setIsLoggedIn(false);
-                navigate('/');  // Redirect to home after logout
+                navigate('/Local-artisian-market-place');  // Redirect to home after logout
                 window.location.reload();  // Force a full page reload to refresh the content
             } else {
                 console.error('Logout failed');
