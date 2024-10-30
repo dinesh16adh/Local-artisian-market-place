@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ProductModal from './ProductModal';
+import { useNavigate } from 'react-router-dom';
 import CartModal from './CartModal';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5174';
@@ -8,16 +8,16 @@ const Collection = ({ addToCart }) => {
   const [items, setItems] = useState([]);
   const [categories, setCategories] = useState(['All']);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedProduct, setSelectedProduct] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [categoryPage, setCategoryPage] = useState(1);
   const [autoSlideIndex, setAutoSlideIndex] = useState(0);
-  const [sortOrder, setSortOrder] = useState('relevant'); 
+  const [sortOrder, setSortOrder] = useState('relevant');
 
   const productsPerPage = 12;
   const categoriesPerPage = 15;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchItemsAndCategories = async () => {
@@ -72,8 +72,10 @@ const Collection = ({ addToCart }) => {
   const handleNextCategoryPage = () => setCategoryPage((prev) => prev + 1);
   const handlePreviousCategoryPage = () => setCategoryPage((prev) => Math.max(prev - 1, 1));
 
-  const handleProductClick = (product) => setSelectedProduct(product);
-  const handleCloseModal = () => setSelectedProduct(null);
+  const handleProductClick = (product) => {
+    const productName = product.title.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/product/${productName}/${product.id}`);
+  };
 
   const handleAddToCart = (product, event) => {
     event.stopPropagation();
@@ -268,7 +270,6 @@ const Collection = ({ addToCart }) => {
         </div>
       </div>
 
-      <ProductModal product={selectedProduct} isOpen={!!selectedProduct} onClose={handleCloseModal} />
       <CartModal showModal={showModal} setShowModal={setShowModal} />
     </div>
   );

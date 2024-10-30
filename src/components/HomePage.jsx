@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { assets } from '../assets/assets';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CartModal from './CartModal';
-import ProductModal from './ProductModal';
 import Newsletterbox from './Newsletterbox';
 import ProductSlider from './ProductSlider';
 import Ourpolicies from './Ourpolicies';
@@ -15,10 +14,11 @@ const HomePage = ({ addToCart }) => {
   const [visibleProducts, setVisibleProducts] = useState(12);
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [showModal, setShowModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
   const [showNewsletterPopup, setShowNewsletterPopup] = useState(false);
   const [userName, setUserName] = useState(null);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+
+  const navigate = useNavigate();
 
   const messages = [
     "Find Nepali local homemade products, arts, and more in one place.",
@@ -70,16 +70,13 @@ const HomePage = ({ addToCart }) => {
     : items.filter(item => item.category === categoryFilter);
 
   const handleAddToCart = (product) => {
-    addToCart(product); // Directly use the prop function to add item to cart
+    addToCart(product);
     setShowModal(true);
   };
 
   const handleProductClick = (product) => {
-    setSelectedProduct(product);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedProduct(null);
+    // Navigate to the product page with product ID and name
+    navigate(`/product/${product.title.toLowerCase().replace(/\s+/g, '-')}/${product.id}`);
   };
 
   const closeNewsletterPopup = () => {
@@ -202,7 +199,6 @@ const HomePage = ({ addToCart }) => {
         </div>
       )}
 
-      <ProductModal product={selectedProduct} isOpen={!!selectedProduct} onClose={handleCloseModal} />
       <CartModal showModal={showModal} setShowModal={setShowModal} />
       <Ourpolicies />
     </div>
