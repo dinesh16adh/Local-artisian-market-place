@@ -14,6 +14,8 @@ import Footer from './components/Footer';
 import NotFoundPage from './components/NotFoundPage';
 import UserProfile from './components/UserProfile';
 import ProductPage from './components/ProductPage';
+import Chatbot from './components/Chatbot';
+
 
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -63,7 +65,10 @@ const App = () => {
         <Route path="/profile" element={<UserProfile />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      
+      
       <Footer />
+      <Chatbot />
     </div>
   );
 };
