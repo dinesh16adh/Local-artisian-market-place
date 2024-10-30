@@ -8,6 +8,13 @@ import Ourpolicies from './Ourpolicies';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5174';
 
+// Moved static messages array outside the component
+const messages = [
+  "Find Nepali local homemade products, arts, and more in one place.",
+  "Don’t be a victim of fraud; get authentic, verified products here!",
+  "Explore handmade crafts, cultural artifacts, and more from Nepal."
+];
+
 const HomePage = ({ addToCart }) => {
   const [items, setItems] = useState([]);
   const [categories, setCategories] = useState(['All']);
@@ -17,14 +24,9 @@ const HomePage = ({ addToCart }) => {
   const [showNewsletterPopup, setShowNewsletterPopup] = useState(false);
   const [userName, setUserName] = useState(null);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-
+  const [error, setError] = useState(null); // Error state for data fetching
+  
   const navigate = useNavigate();
-
-  const messages = [
-    "Find Nepali local homemade products, arts, and more in one place.",
-    "Don’t be a victim of fraud; get authentic, verified products here!",
-    "Explore handmade crafts, cultural artifacts, and more from Nepal."
-  ];
 
   useEffect(() => {
     const fetchItemsAndCategories = async () => {
@@ -38,6 +40,7 @@ const HomePage = ({ addToCart }) => {
         setCategories(['All', ...categoriesData]);
       } catch (error) {
         console.error("Error fetching items or categories:", error);
+        setError("Unable to fetch products or categories. Please try again later.");
       }
     };
 
@@ -55,7 +58,7 @@ const HomePage = ({ addToCart }) => {
     }, 4000);
 
     return () => clearInterval(messageInterval);
-  }, [messages.length]);
+  }, []);
 
   useEffect(() => {
     const hasVisited = localStorage.getItem('hasVisited');
@@ -75,7 +78,6 @@ const HomePage = ({ addToCart }) => {
   };
 
   const handleProductClick = (product) => {
-    // Navigate to the product page with product ID and name
     navigate(`/product/${product.title.toLowerCase().replace(/\s+/g, '-')}/${product.id}`);
   };
 
@@ -91,7 +93,7 @@ const HomePage = ({ addToCart }) => {
     const halfStar = rating % 1 !== 0;
     const totalStars = 5;
     return (
-      <div className="flex items-center mb-2">
+      <div className="flex items-center mb-2" aria-label={`Rating: ${rating} stars`}>
         {[...Array(filledStars)].map((_, i) => (
           <span key={i} className="text-yellow-400">&#9733;</span>
         ))}
@@ -102,6 +104,10 @@ const HomePage = ({ addToCart }) => {
       </div>
     );
   };
+
+  if (error) {
+    return <div className="text-center text-red-600 mt-10">{error}</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -132,7 +138,6 @@ const HomePage = ({ addToCart }) => {
         </div>
       </div>
 
-      {/* Compact Inline Newsletter Box */}
       {!showNewsletterPopup && <Newsletterbox mode="inline" />}
 
       {/* Category Filter */}
@@ -141,7 +146,8 @@ const HomePage = ({ addToCart }) => {
           <button
             key={category}
             onClick={() => setCategoryFilter(category)}
-            className={`px-4 py-2 border ${categoryFilter === category ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-600'} rounded-lg shadow-sm hover:bg-indigo-500 hover:text-white transition-all`}
+            className={`px-4 py-2 border ${categoryFilter === category ? 'bg-indigo-700 text-white' : 'bg-gray-200 text-gray-700'} rounded-lg shadow-sm hover:bg-indigo-500 hover:text-white transition-all`}
+            aria-label={`Filter by ${category}`}
           >
             {category}
           </button>
@@ -160,8 +166,11 @@ const HomePage = ({ addToCart }) => {
             key={product.id} 
             className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300 transform hover:scale-105"
             onClick={() => handleProductClick(product)}
+            role="button"
+            tabIndex={0}
           >
-            <ProductSlider images={product.photos.map(photo => photo.url)} />
+            {/* Lazy loading for product images */}
+            <ProductSlider images={product.photos.map(photo => ({ url: photo.url, alt: product.title }))} lazyLoad />
             <div className="p-5">
               <h3 className="font-bold text-xl mb-2">{product.title}</h3>
               <p className="text-gray-600 text-sm mb-2">{product.description}</p>
