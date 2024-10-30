@@ -196,13 +196,14 @@ const closeButtonStyle = {
 };
 
 const chatContainerStyle = {
-  height: "200px",
+  height: "300px",
   overflowY: "auto",
   marginBottom: "10px",
   padding: "10px",
   backgroundColor: "#fff",
   borderRadius: "4px",
   border: "1px solid #ccc",
+  width: "100%"
 };
 
 const inputStyle = {

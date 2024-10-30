@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { assets } from '../assets/assets';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 
@@ -6,8 +6,9 @@ const Navbar = () => {
     const [visible, setVisible] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
+    const [cartCount, setCartCount] = useState(0);  // State for cart count
     const navigate = useNavigate();
-    let hideDropdownTimeout;
+    const hideDropdownTimeoutRef = useRef(null);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -31,8 +32,7 @@ const Navbar = () => {
             if (response.ok) {
                 localStorage.removeItem('user');
                 setIsLoggedIn(false);
-                navigate('/');  // Redirect to home after logout
-                window.location.reload();  // Force a full page reload to refresh the content
+                navigate('/');
             } else {
                 console.error('Logout failed');
             }
@@ -42,20 +42,19 @@ const Navbar = () => {
     };
 
     const handleHomeClick = (e) => {
-        e.preventDefault();  // Prevents default link behavior
+        e.preventDefault();
         navigate('/');
-        window.location.reload();  // Forces a full page reload to refresh content
     };
 
     const handleMouseEnter = () => {
         setShowDropdown(true);
-        clearTimeout(hideDropdownTimeout);
+        clearTimeout(hideDropdownTimeoutRef.current);
     };
 
     const handleMouseLeave = () => {
-        hideDropdownTimeout = setTimeout(() => {
+        hideDropdownTimeoutRef.current = setTimeout(() => {
             setShowDropdown(false);
-        }, 3000);
+        }, 1000);  // Shortened timeout for a more responsive feel
     };
 
     return (
@@ -72,13 +71,10 @@ const Navbar = () => {
 
             {/* Main Navbar */}
             <div className="flex items-center justify-between py-5 px-4 font-medium">
-                
-                {/* Logo */}
                 <Link to="/" onClick={handleHomeClick} className="flex-shrink-0">
                     <img src={assets.logo} className="w-36 cursor-pointer" alt="Logo" />
                 </Link>
 
-                {/* Desktop Navigation Links */}
                 <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
                     {navItems.map((item) => (
                         <NavLink 
@@ -93,11 +89,9 @@ const Navbar = () => {
                     ))}
                 </ul>
 
-                {/* Right Section: Icons */}
                 <div className="flex items-center gap-6">
                     <img src={assets.search_icon} className="w-5 cursor-pointer" alt="Search" />
                     
-                    {/* Profile Icon with Dropdown - only visible when logged in */}
                     {isLoggedIn && (
                         <div 
                             className="relative group"
@@ -120,13 +114,11 @@ const Navbar = () => {
                         </div>
                     )}
 
-                    {/* Cart Icon */}
                     <Link to="/cart" className="relative">
                         <img src={assets.cart_icon} className="w-5 min-w-5" alt="Cart" />
-                        <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">1</p>
+                        <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">{cartCount}</p>
                     </Link>
 
-                    {/* Menu Icon for Smaller Screens */}
                     <img
                         onClick={() => setVisible(true)}
                         src={assets.menu_icon}
@@ -136,7 +128,6 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* Sidebar Menu for Smaller Screens */}
             {visible && (
                 <div className="absolute top-0 right-0 bottom-0 overflow-hidden bg-white w-full transition-all">
                     <div className="flex flex-col text-grey-600">
