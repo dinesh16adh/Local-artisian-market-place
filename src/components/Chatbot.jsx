@@ -15,20 +15,31 @@ const Chatbot = () => {
     if (savedMessages) {
       setMessages(JSON.parse(savedMessages));
     }
-    const timer = setTimeout(handleUserInteraction, 5000);
-  
-    return () => clearTimeout(timer);
+
+    const lastPopupTime = localStorage.getItem('lastPopupTime');
+    const now = Date.now();
+
+    // Show popup and play sound if 24 hours have passed since the last popup
+    if (!lastPopupTime || now - lastPopupTime >= 24 * 60 * 60 * 1000) {
+      const timer = setTimeout(() => {
+        handleUserInteraction(); // Display popup and play sound
+        localStorage.setItem('lastPopupTime', now.toString()); // Update popup time
+      }, 10000); // 10-second delay
+      
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   useEffect(() => {
     localStorage.setItem('chatMessages', JSON.stringify(messages));
-    // Scroll to the latest message
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
 
   const playNotificationSound = () => {
+    // Attempt to play sound with a simulated "user interaction"
+    document.body.click();
     const audio = new Audio(assets.notificationSound);
     audio.play().catch((error) => {
       if (error.name === 'NotAllowedError') {
@@ -36,7 +47,7 @@ const Chatbot = () => {
       }
     });
   };
-  
+
   const handleUserInteraction = () => {
     if (!isOpen) {
       setIsOpen(true);
@@ -44,7 +55,7 @@ const Chatbot = () => {
       playNotificationSound();
     }
   };
-  
+
   const handleInputChange = (e) => setInput(e.target.value);
 
   const handleSend = () => {
