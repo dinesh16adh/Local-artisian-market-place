@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa'; // Importing the close icon
 
 const Chatbot = () => {
@@ -7,6 +7,19 @@ const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userName, setUserName] = useState(""); // State to store user's name
   const [isNameSet, setIsNameSet] = useState(false); // State to check if the name is set
+
+  useEffect(() => {
+    // Load messages from local storage when the component mounts
+    const savedMessages = localStorage.getItem('chatMessages');
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Save messages to local storage whenever messages change
+    localStorage.setItem('chatMessages', JSON.stringify(messages));
+  }, [messages]);
 
   const handleInputChange = (e) => setInput(e.target.value);
 
@@ -59,10 +72,8 @@ const Chatbot = () => {
   const toggleChatbot = () => setIsOpen(!isOpen);
 
   const closeChatbot = () => {
-    setIsOpen(false);
-    setMessages([]); // Clear messages when closing
-    setIsNameSet(false); // Reset name setting
-    setUserName(""); // Clear user name
+    setIsOpen(false); // Just hide the chatbot
+    // Do not clear messages or local storage
   };
 
   return (
