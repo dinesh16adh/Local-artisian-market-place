@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import { assets } from '../assets/assets';
 
@@ -8,6 +8,7 @@ const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userName, setUserName] = useState("");
   const [isNameSet, setIsNameSet] = useState(false);
+  const chatContainerRef = useRef(null);
 
   useEffect(() => {
     const savedMessages = localStorage.getItem('chatMessages');
@@ -21,13 +22,16 @@ const Chatbot = () => {
 
   useEffect(() => {
     localStorage.setItem('chatMessages', JSON.stringify(messages));
+    // Scroll to the latest message
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   }, [messages]);
 
   const playNotificationSound = () => {
     const audio = new Audio(assets.notificationSound);
     audio.play().catch((error) => {
       if (error.name === 'NotAllowedError') {
-        // Optional: Log or handle the error gracefully if needed
         console.log("Audio playback blocked. Waiting for user interaction.");
       }
     });
@@ -110,7 +114,7 @@ const Chatbot = () => {
               <FaTimes size={14} color="#fff" />
             </button>
           </div>
-          <div style={chatContainerStyle}>
+          <div ref={chatContainerRef} style={chatContainerStyle}>
             {messages.map((msg, index) => (
               <div key={index} style={{ textAlign: msg.sender === "user" ? "right" : "left", margin: "5px 0" }}>
                 <strong>{msg.sender === "user" ? "You" : "Bot"}:</strong> {msg.text}
@@ -159,7 +163,7 @@ const chatHeadStyle = {
 };
 
 const chatboxStyle = {
-  width: "85vw", // Adjusts for smaller screens
+  width: "85vw",
   maxWidth: "320px",
   padding: "10px",
   backgroundColor: "#FAFAFA", 
