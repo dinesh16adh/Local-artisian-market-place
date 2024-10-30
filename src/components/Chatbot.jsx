@@ -77,7 +77,7 @@ const Chatbot = () => {
   };
 
   return (
-    <div style={{ position: "fixed", bottom: "0", right: "20px", width: "300px", zIndex: 1000 }}>
+    <div style={{ position: "fixed", bottom: "0", right: "20px", width: "300px", zIndex: 1 }}>
       {/* Title to open the chatbot */}
       {!isOpen && (
         <div onClick={toggleChatbot} style={toggleButtonStyle}>
@@ -144,6 +144,7 @@ const toggleButtonStyle = {
 
 const chatboxStyle = {
   padding: "10px",
+  margin: "-5px",
   backgroundColor: "#FAFAFA", 
   borderRadius: "8px",
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
