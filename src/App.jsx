@@ -5,7 +5,6 @@ import Cart from './components/Cart';
 import Collection from './components/Collection';
 import About from './components/AboutUs';
 import Contact from './components/Contact';
-import Product from './pages/Product';
 import Login from './components/Login';
 import Signup from './components/SignUp';
 import PlaceOrder from './components/PlaceOrder';
@@ -14,6 +13,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import NotFoundPage from './components/NotFoundPage';
 import UserProfile from './components/UserProfile';
+import ProductPage from './components/ProductPage';
 
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -45,10 +45,20 @@ const App = () => {
         <Route path="/collection" element={<Collection addToCart={addToCart} />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/product/:productid" element={<Product />} />
+        <Route 
+          path="/product/:productName/:productId" 
+          element={
+            <ProductPage 
+              addToCart={addToCart} 
+              cartItems={cartItems} 
+              setCartItems={setCartItems} 
+              isLoggedIn={isLoggedIn} 
+            />
+          } 
+        />        
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/place-order" element={isLoggedIn ? <PlaceOrder cartItems={cartItems} /> : <Navigate to="/login" />} />
+        <Route path="/place-order" element={isLoggedIn ? <PlaceOrder cartItems={cartItems} /> : <Navigate to="/login" state={{ redirectTo: '/place-order' }} />} />
         <Route path="/orders" element={<Order />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="*" element={<NotFoundPage />} />

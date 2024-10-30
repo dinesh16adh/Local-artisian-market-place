@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const PlaceOrder = ({ cartItems, setCartItems }) => {
   const [user, setUser] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check if product and quantity are passed from "Buy Now" in ProductPage
+  const product = location.state?.product;
+  const quantity = location.state?.quantity || 1; // Default to 1 if no quantity is provided
 
   // Fetch user details from local storage
   useEffect(() => {
@@ -14,8 +19,13 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
     }
   }, []);
 
+  // Determine items to display in the order summary
+  const orderItems = product
+    ? [{ ...product, quantity }] // If coming from ProductPage, use the single product and quantity
+    : cartItems; // Otherwise, use the full cart items
+
   // Total and delivery fee calculations
-  const itemsTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const itemsTotal = orderItems.reduce((total, item) => total + item.price * item.quantity, 0);
   const deliveryFee = 1.25; // Updated to dollar equivalent
   const grandTotal = itemsTotal + deliveryFee;
 
@@ -25,15 +35,15 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
       setShowLoginModal(true);
     } else {
       alert('Proceeding with payment...');
-      // need to addd  payment logic
-      // ned to add logic for Update stock, clear cart, etc.
+      // Add payment logic here
+      // Example: Update stock, clear cart, etc.
     }
   };
 
   const closeModal = () => setShowLoginModal(false);
   const goToLogin = () => {
     closeModal();
-    navigate('/login');
+    navigate('/login', { state: { redirectAfterLogin: '/place-order', product, quantity } });
   };
 
   return (
@@ -54,7 +64,7 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
       {/* Order Summary */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold">Order Summary</h3>
-        {cartItems.map((item, index) => (
+        {orderItems.map((item, index) => (
           <div key={index} className="flex justify-between items-center border-b py-3">
             <span>{item.title} x {item.quantity}</span>
             <span>${(item.price * item.quantity).toFixed(2)}</span>

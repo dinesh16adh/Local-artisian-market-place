@@ -34,14 +34,16 @@ const Login = ({ setIsLoggedIn }) => {
       const { user } = data;
       localStorage.setItem('user', JSON.stringify({ id: user.id, fullName: user.username, email: user.email }));
 
-      setIsLoggedIn(true); // Set logged-in status in App
+      setIsLoggedIn(true);
 
-      // Conditionally show PlaceOrder page if coming from cart
-      if (location.state?.fromCart) {
-        navigate('/place-order');
+      // Redirect based on state from previous page
+      if (location.state?.redirectAfterLogin === '/place-order') {
+        // Pass product and quantity if available
+        navigate('/place-order', { state: { product: location.state.product, quantity: location.state.quantity } });
       } else {
-        navigate('/');  // Redirect to home after login
-        window.location.reload();  // Force a full page reload to refresh the content
+        // Default redirect to home
+        navigate('/');
+        window.location.reload();
       }
     } catch (err) {
       setError(err.message);
