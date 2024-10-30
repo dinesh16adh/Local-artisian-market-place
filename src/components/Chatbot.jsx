@@ -14,13 +14,8 @@ const Chatbot = () => {
     if (savedMessages) {
       setMessages(JSON.parse(savedMessages));
     }
-
-    const timer = setTimeout(() => {
-      setIsOpen(true);
-      setMessages((prevMessages) => [...prevMessages, { sender: "bot", text: "How can I help you?" }]);
-      playNotificationSound();
-    }, 10000); // 10 seconds delay
-
+    const timer = setTimeout(handleUserInteraction, 5000);
+  
     return () => clearTimeout(timer);
   }, []);
 
@@ -30,9 +25,22 @@ const Chatbot = () => {
 
   const playNotificationSound = () => {
     const audio = new Audio(assets.notificationSound);
-    audio.play();
+    audio.play().catch((error) => {
+      if (error.name === 'NotAllowedError') {
+        // Optional: Log or handle the error gracefully if needed
+        console.log("Audio playback blocked. Waiting for user interaction.");
+      }
+    });
   };
-
+  
+  const handleUserInteraction = () => {
+    if (!isOpen) {
+      setIsOpen(true);
+      setMessages((prevMessages) => [...prevMessages, { sender: "bot", text: "How can I help you?" }]);
+      playNotificationSound();
+    }
+  };
+  
   const handleInputChange = (e) => setInput(e.target.value);
 
   const handleSend = () => {
