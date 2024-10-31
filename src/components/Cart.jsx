@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Footer from './Footer';
 
 const Cart = ({ cartItems, setCartItems }) => {
   const [user, setUser] = useState(null);
@@ -46,12 +45,12 @@ const Cart = ({ cartItems, setCartItems }) => {
   };
 
   return (
-    <div className="p-10 min-h-screen flex flex-col justify-between">
+    <div className="p-10 flex flex-col flex-grow justify-between">
       <h2 className="text-3xl font-bold mb-6 text-center">Your Cart</h2>
       {cartItems.length === 0 ? (
         <p className="text-center text-lg">Your cart is empty.</p>
       ) : (
-        <div className="grid gap-6">
+        <div className="grid gap-6 flex-grow">
           {cartItems.map((item) => (
             <div key={item.id} className="flex items-center bg-white shadow-md rounded-lg p-5">
               <img 
@@ -133,8 +132,6 @@ const Cart = ({ cartItems, setCartItems }) => {
           </div>
         </div>
       )}
-
-      <Footer />
     </div>
   );
 };
