@@ -50,7 +50,7 @@ const Chatbot = () => {
   const handleUserInteraction = () => {
     if (!isOpen) {
       setIsOpen(true);
-      setMessages((prevMessages) => [...prevMessages, { sender: "bot", text: "How can I help you?", time: new Date().toLocaleTimeString() }]);
+      setMessages((prevMessages) => [...prevMessages, { sender: "bot", text: "What can I call you?", time: new Date().toLocaleTimeString() }]);
       playNotificationSound();
     }
   };
