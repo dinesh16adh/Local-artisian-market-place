@@ -1,44 +1,79 @@
-import React, { useState, useEffect } from 'react';
-import { FaTimes } from 'react-icons/fa'; // Importing the close icon
+import React, { useState, useEffect, useRef } from 'react';
+import { FaTimes } from 'react-icons/fa';
+import { assets } from '../assets/assets';
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [userName, setUserName] = useState(""); // State to store user's name
-  const [isNameSet, setIsNameSet] = useState(false); // State to check if the name is set
+  const [userName, setUserName] = useState("");
+  const [isNameSet, setIsNameSet] = useState(false);
+  const chatContainerRef = useRef(null);
 
   useEffect(() => {
-    // Load messages from local storage when the component mounts
     const savedMessages = localStorage.getItem('chatMessages');
     if (savedMessages) {
       setMessages(JSON.parse(savedMessages));
     }
+
+    const lastPopupTime = localStorage.getItem('lastPopupTime');
+    const now = Date.now();
+
+    // Show popup and play sound if 24 hours have passed since the last popup
+    if (!lastPopupTime || now - lastPopupTime >= 24 * 60 * 60 * 1000) {
+      const timer = setTimeout(() => {
+        handleUserInteraction(); // Display popup and play sound
+        localStorage.setItem('lastPopupTime', now.toString()); // Update popup time
+      }, 10000); // 10-second delay
+      
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   useEffect(() => {
-    // Save messages to local storage whenever messages change
     localStorage.setItem('chatMessages', JSON.stringify(messages));
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   }, [messages]);
+
+  const playNotificationSound = () => {
+    // Attempt to play sound with a simulated "user interaction"
+    document.body.click();
+    const audio = new Audio(assets.notificationSound);
+    audio.play().catch((error) => {
+      if (error.name === 'NotAllowedError') {
+        console.log("Audio playback blocked. Waiting for user interaction.");
+      }
+    });
+  };
+
+  const handleUserInteraction = () => {
+    if (!isOpen) {
+      setIsOpen(true);
+      setMessages((prevMessages) => [...prevMessages, { sender: "bot", text: "How can I help you?" }]);
+      playNotificationSound();
+    }
+  };
 
   const handleInputChange = (e) => setInput(e.target.value);
 
   const handleSend = () => {
-    if (!input.trim()) return; // Prevent empty messages
+    if (!input.trim()) return;
 
     if (!isNameSet) {
       setUserName(input);
       setMessages((prevMessages) => [...prevMessages, { sender: "bot", text: `Hello ${input}! How can we assist you today?` }]);
-      setIsNameSet(true); // Set name has been provided
-      setInput(""); // Clear input after setting name
-      return; // Exit early after setting the name
+      setIsNameSet(true);
+      setInput("");
+      return;
     }
 
     const userMessage = { sender: "user", text: input };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
 
     const botResponse = getBotResponse(input);
-    setMessages((prevMessages) => [...prevMessages, botResponse]); // Only send bot response once
+    setMessages((prevMessages) => [...prevMessages, botResponse]);
 
     setInput("");
   };
@@ -56,7 +91,6 @@ const Chatbot = () => {
       "order status": "You can check your order status in your account section.",
       "size guide": "Refer to our size guide on the product page for accurate measurements.",
       "gift cards": "Gift cards are available for purchase on our website.",
-      // Add more responses as needed
     };
 
     const lowerInput = input.toLowerCase();
@@ -72,38 +106,31 @@ const Chatbot = () => {
   const toggleChatbot = () => setIsOpen(!isOpen);
 
   const closeChatbot = () => {
-    setIsOpen(false); // Just hide the chatbot
-    // Do not clear messages or local storage
+    setIsOpen(false);
   };
 
   return (
-    <div style={{ position: "fixed", bottom: "0", right: "20px", width: "300px", zIndex: 1 }}>
-      {/* Title to open the chatbot */}
+    <div style={{ position: "fixed", bottom: "20px", right: "20px", zIndex: 1 }}>
       {!isOpen && (
-        <div onClick={toggleChatbot} style={toggleButtonStyle}>
-          <h2 style={{ margin: 0, color: '#fff' }}>Chat with Us</h2>
+        <div onClick={toggleChatbot} style={chatHeadStyle}>
+          <h2 style={{ margin: 0, color: '#fff', fontSize: '11px', textAlign: 'center' }}>Chat with us</h2>
         </div>
       )}
 
       {isOpen && (
         <div style={chatboxStyle}>
           <div style={headerStyle}>
-            <h2 style={{ margin: 0, textAlign: 'center' }}>Chat with Us</h2> {/* Title */}
+            <h2 style={{ margin: 0, fontSize: '16px', textAlign: 'center' }}>Chat with Us</h2>
             <button onClick={closeChatbot} style={closeButtonStyle}>
-              <FaTimes size={16} color="#fff" /> {/* Close icon */}
+              <FaTimes size={14} color="#fff" />
             </button>
           </div>
-          <div style={chatContainerStyle}>
+          <div ref={chatContainerRef} style={chatContainerStyle}>
             {messages.map((msg, index) => (
               <div key={index} style={{ textAlign: msg.sender === "user" ? "right" : "left", margin: "5px 0" }}>
                 <strong>{msg.sender === "user" ? "You" : "Bot"}:</strong> {msg.text}
               </div>
             ))}
-            {!isNameSet && (
-              <div style={{ textAlign: "left", margin: "5px 0" }}>
-                <strong>Bot:</strong> What’s your name?
-              </div>
-            )}
           </div>
           {isNameSet ? (
             <>
@@ -123,7 +150,7 @@ const Chatbot = () => {
               value={input}
               onChange={handleInputChange}
               onKeyPress={(e) => e.key === "Enter" && handleSend()}
-              placeholder="What's your name?"
+              placeholder="What can I call you?"
               style={inputStyle}
             />
           )}
@@ -133,18 +160,23 @@ const Chatbot = () => {
   );
 };
 
-const toggleButtonStyle = {
-  padding: "10px",
-  margin: "-5px",
+const chatHeadStyle = {
+  width: "45px",
+  height: "45px",
+  padding: "5px",
   backgroundColor: "#007bff",
-  borderRadius: "8px",
+  borderRadius: "50%",
   cursor: "pointer",
-  textAlign: "center",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
 };
 
 const chatboxStyle = {
+  width: "85vw",
+  maxWidth: "320px",
   padding: "10px",
-  margin: "-5px",
   backgroundColor: "#FAFAFA", 
   borderRadius: "8px",
   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
@@ -154,9 +186,7 @@ const headerStyle = {
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
-  backgroundColor: "none", 
   padding: "10px",
-  borderRadius: "8px",
 };
 
 const closeButtonStyle = {
@@ -178,8 +208,8 @@ const chatContainerStyle = {
 
 const inputStyle = {
   width: "100%",
-  padding: "10px",
-  marginBottom: "10px",
+  padding: "8px",
+  marginBottom: "8px",
   borderRadius: "4px",
   border: "1px solid #ccc",
 };
