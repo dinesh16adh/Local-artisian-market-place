@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes, FaComments } from 'react-icons/fa'; // Import FaComments here
 import { assets } from '../assets/assets';
 
 const Chatbot = () => {
@@ -113,7 +113,7 @@ const Chatbot = () => {
     <div style={{ position: "fixed", bottom: "20px", right: "20px", zIndex: 1 }}>
       {!isOpen && (
         <div onClick={toggleChatbot} style={chatHeadStyle}>
-          <h2 style={{ margin: 0, color: '#fff', fontSize: '11px', textAlign: 'center' }}>Chat with us</h2>
+          <FaComments size={24} color="#fff" /> {/* Chat icon added here */}
         </div>
       )}
 
