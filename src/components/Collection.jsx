@@ -14,7 +14,6 @@ const Collection = ({ addToCart }) => {
   const [categoryPage, setCategoryPage] = useState(1);
   const [autoSlideIndex, setAutoSlideIndex] = useState(0);
   const [sortOrder, setSortOrder] = useState('relevant');
-  const [searchQuery, setSearchQuery] = useState(''); // New state for search query
 
   const productsPerPage = 12;
   const categoriesPerPage = 15;
@@ -49,17 +48,11 @@ const Collection = ({ addToCart }) => {
     return () => clearInterval(intervalId);
   }, []);
 
-  // Filter products based on selected category and search query
   const filteredProducts = selectedCategory === 'All'
     ? items
     : items.filter(product => product.category === selectedCategory);
 
-  const searchedProducts = filteredProducts.filter(product =>
-    product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    product.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const sortedProducts = searchedProducts.sort((a, b) => {
+  const sortedProducts = filteredProducts.sort((a, b) => {
     if (sortOrder === 'highToLow') return b.price - a.price;
     if (sortOrder === 'lowToHigh') return a.price - b.price;
     return 0;
@@ -205,39 +198,56 @@ const Collection = ({ addToCart }) => {
       </div>
 
       <div className="w-full md:w-3/4 ml-0 md:ml-1/4">
-        {/* Search Input Field */}
-        <div className="mb-4">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="p-2 border border-gray-300 rounded-lg w-full"
-          />
+        <div className="flex justify-end items-center mb-4">
+          <select
+            onChange={(e) => setSortOrder(e.target.value)}
+            value={sortOrder}
+            className="p-2 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-indigo-600"
+          >
+            <option value="relevant">Relevant</option>
+            <option value="highToLow">Price: High to Low</option>
+            <option value="lowToHigh">Price: Low to High</option>
+          </select>
         </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {currentProducts.map((product) => (
+            <div
+              key={product.id}
+              className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer hover:shadow-xl transform transition-all duration-300 hover:scale-105"
+              onClick={() => handleProductClick(product)}
+            >
+              <img
+                src={product.photos[autoSlideIndex % product.photos.length]?.url}
+                alt={product.title}
+                className="w-full h-48 object-cover rounded-t-lg"
+              />
+              <div className="p-5">
+                <h3 className="font-bold text-xl mb-2 text-gray-800">{product.title}</h3>
+                <p className="text-gray-600 mb-2 text-sm">{product.description}</p>
+                <p className="text-gray-800 font-semibold mb-4">Price: ${product.price}</p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {currentProducts.length > 0 ? (
-            currentProducts.map((product) => (
-              <div key={product.id} className="bg-white rounded-lg shadow-md p-4 cursor-pointer" onClick={() => handleProductClick(product)}>
-                <img src={product.image} alt={product.title} className="h-32 w-full object-cover rounded-md mb-2" />
-                <h3 className="text-lg font-semibold">{product.title}</h3>
-                {renderStars(product.rating)}
-                <p className="text-gray-700">${product.price}</p>
+                {product.rating && renderStars(product.rating)}
+
+                <p
+                  className={`text-sm font-semibold ${
+                    product.inStock > 5 ? 'text-green-600' : 'text-red-600'
+                  }`}
+                >
+                  {product.inStock > 5 ? `In Stock: ${product.inStock}` : 'Low Stock'}
+                </p>
+
                 <button
-                  onClick={(event) => handleAddToCart(product, event)}
-                  className="mt-2 w-full py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 transition"
+                  onClick={(e) => handleAddToCart(product, e)}
+                  className="w-full py-2 mt-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-500 transition-colors"
                 >
                   Add to Cart
                 </button>
               </div>
-            ))
-          ) : (
-            <p className="col-span-4 text-center text-gray-500">No products found</p>
-          )}
+            </div>
+          ))}
         </div>
 
-        <div className="flex justify-between mt-6">
+        <div className="flex justify-between items-center mt-6">
           <button
             onClick={handlePreviousPage}
             disabled={currentPage === 1}
@@ -247,6 +257,7 @@ const Collection = ({ addToCart }) => {
           >
             Previous
           </button>
+          <span className="text-gray-600 font-medium">Page {currentPage}</span>
           <button
             onClick={handleNextPage}
             disabled={indexOfLastProduct >= sortedProducts.length}

@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { assets } from '../assets/assets';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { BiSearch, BiCart, BiUser } from 'react-icons/bi';
+import { MdClose } from 'react-icons/md'; 
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const [cartCount, setCartCount] = useState(0);
-    const [showSearch, setShowSearch] = useState(false);  // Toggle for search input
-    const [searchQuery, setSearchQuery] = useState("");   // State for search query
+    const [showSearch, setShowSearch] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
+    const location = useLocation();
     const hideDropdownTimeoutRef = useRef(null);
 
     useEffect(() => {
@@ -61,6 +63,11 @@ const Navbar = () => {
         }, 1000);
     };
 
+    const clearSearch = () => {
+        setSearchQuery("");
+        setShowSearch(false);
+    };
+
     return (
         <div className="relative">
             <div className="absolute top-6 right-4 flex gap-4 text-sm">
@@ -82,26 +89,37 @@ const Navbar = () => {
                         <NavLink 
                             key={item.to} 
                             to={item.to} 
-                            className="flex flex-col items-center gap-1"
+                            className={({ isActive }) => `relative flex flex-col items-center gap-1 text-gray-700`}
                         >
                             <p>{item.label}</p>
+                            {location.pathname === item.to && (
+                                <span className="absolute bottom-[-5px] left-0 right-0 h-1 bg-gray-700 mx-auto" style={{ width: '50%' }} />
+                            )}
                         </NavLink>
                     ))}
                 </ul>
 
                 <div className="flex items-center gap-6">
                     {showSearch ? (
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                            className="border-b border-gray-300 outline-none text-sm px-2 py-1 w-32"
-                            placeholder="Search items..."
-                            autoFocus
-                        />
+                        <div className="flex items-center">
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                                className="border-b border-gray-300 outline-none text-sm px-2 py-1 w-32"
+                                placeholder="Search items..."
+                                autoFocus
+                            />
+                            <MdClose 
+                                className="ml-2 w-5 h-5 cursor-pointer text-gray-500" 
+                                onClick={clearSearch} 
+                            />
+                        </div>
                     ) : (
-                        <BiSearch className="w-5 h-5 cursor-pointer" onClick={() => setShowSearch(true)} />
+                        location.pathname === '/collection' && ( // Show search only on the collection page
+                            <BiSearch className="w-5 h-5 cursor-pointer" onClick={() => setShowSearch(true)} />
+                        )
                     )}
 
                     {isLoggedIn && (

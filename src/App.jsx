@@ -15,6 +15,7 @@ import NotFoundPage from './components/NotFoundPage';
 import UserProfile from './components/UserProfile';
 import ProductPage from './components/ProductPage';
 import Chatbot from './components/Chatbot';
+import SearchResults from './components/SearchResults';
 
 
 const App = () => {
@@ -47,6 +48,7 @@ const App = () => {
         <Route path="/collection" element={<Collection addToCart={addToCart} />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path='/search' element ={<SearchResults />} />
         <Route 
           path="/product/:productName/:productId" 
           element={
@@ -57,7 +59,7 @@ const App = () => {
               isLoggedIn={isLoggedIn} 
             />
           } 
-        />        
+        />
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/place-order" element={isLoggedIn ? <PlaceOrder cartItems={cartItems} /> : <Navigate to="/login" state={{ redirectTo: '/place-order' }} />} />
@@ -65,8 +67,7 @@ const App = () => {
         <Route path="/profile" element={<UserProfile />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      
-      
+
       <Footer />
       <Chatbot />
     </div>
