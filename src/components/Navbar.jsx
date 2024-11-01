@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { assets } from '../assets/assets';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { BiSearch, BiCart, BiUser } from 'react-icons/bi';  // Importing icons from react-icons
+import { BiSearch, BiCart, BiUser } from 'react-icons/bi';
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
-    const [cartCount, setCartCount] = useState(0);  // State for cart count
+    const [cartCount, setCartCount] = useState(0);
+    const [showSearch, setShowSearch] = useState(false);  // Toggle for search input
+    const [searchQuery, setSearchQuery] = useState("");   // State for search query
     const navigate = useNavigate();
     const hideDropdownTimeoutRef = useRef(null);
 
@@ -42,9 +44,10 @@ const Navbar = () => {
         }
     };
 
-    const handleHomeClick = (e) => {
-        e.preventDefault();
-        navigate('/');
+    const handleSearch = () => {
+        if (searchQuery.trim()) {
+            navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+        }
     };
 
     const handleMouseEnter = () => {
@@ -55,12 +58,11 @@ const Navbar = () => {
     const handleMouseLeave = () => {
         hideDropdownTimeoutRef.current = setTimeout(() => {
             setShowDropdown(false);
-        }, 1000);  // Shortened timeout for a more responsive feel
+        }, 1000);
     };
 
     return (
         <div className="relative">
-            {/* Top Right Links for Login and Signup */}
             <div className="absolute top-6 right-4 flex gap-4 text-sm">
                 {!isLoggedIn ? (
                     <>
@@ -70,9 +72,8 @@ const Navbar = () => {
                 ) : null}
             </div>
 
-            {/* Main Navbar */}
             <div className="flex items-center justify-between py-5 px-4 font-medium">
-                <Link to="/" onClick={handleHomeClick} className="flex-shrink-0">
+                <Link to="/" onClick={() => navigate('/')} className="flex-shrink-0">
                     <img src={assets.logo} className="w-36 cursor-pointer" alt="Logo" />
                 </Link>
 
@@ -81,18 +82,28 @@ const Navbar = () => {
                         <NavLink 
                             key={item.to} 
                             to={item.to} 
-                            onClick={item.to === "/" ? handleHomeClick : undefined} 
                             className="flex flex-col items-center gap-1"
                         >
                             <p>{item.label}</p>
-                            <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
                         </NavLink>
                     ))}
                 </ul>
 
                 <div className="flex items-center gap-6">
-                    <BiSearch className="w-5 h-5 cursor-pointer" />  {/* Search icon replaced with BiSearch */}
-                    
+                    {showSearch ? (
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                            className="border-b border-gray-300 outline-none text-sm px-2 py-1 w-32"
+                            placeholder="Search items..."
+                            autoFocus
+                        />
+                    ) : (
+                        <BiSearch className="w-5 h-5 cursor-pointer" onClick={() => setShowSearch(true)} />
+                    )}
+
                     {isLoggedIn && (
                         <div 
                             className="relative group"
@@ -100,7 +111,7 @@ const Navbar = () => {
                             onMouseLeave={handleMouseLeave}
                         >
                             <Link to="/profile">
-                                <BiUser className="w-5 h-5 cursor-pointer" /> {/* Profile icon replaced with BiUser */}
+                                <BiUser className="w-5 h-5 cursor-pointer" />
                             </Link>
                             {showDropdown && (
                                 <div className="absolute right-0 mt-2 w-24 bg-white border rounded shadow-md">
@@ -116,7 +127,7 @@ const Navbar = () => {
                     )}
 
                     <Link to="/cart" className="relative">
-                        <BiCart className="w-5 h-5 cursor-pointer" /> {/* Cart icon replaced with BiCart */}
+                        <BiCart className="w-5 h-5 cursor-pointer" />
                         <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">{cartCount}</p>
                     </Link>
 
