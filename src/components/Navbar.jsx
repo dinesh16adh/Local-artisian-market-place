@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { assets } from '../assets/assets';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-
+import { BiSearch, BiCart, BiUser } from 'react-icons/bi';  // Importing icons from react-icons
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
@@ -91,7 +91,7 @@ const Navbar = () => {
                 </ul>
 
                 <div className="flex items-center gap-6">
-                    <img src={assets.search_icon} className="w-5 cursor-pointer" alt="Search" />
+                    <BiSearch className="w-5 h-5 cursor-pointer" />  {/* Search icon replaced with BiSearch */}
                     
                     {isLoggedIn && (
                         <div 
@@ -100,7 +100,7 @@ const Navbar = () => {
                             onMouseLeave={handleMouseLeave}
                         >
                             <Link to="/profile">
-                                <img className="w-5 cursor-pointer" src={assets.profile_icon} alt="Profile" />
+                                <BiUser className="w-5 h-5 cursor-pointer" /> {/* Profile icon replaced with BiUser */}
                             </Link>
                             {showDropdown && (
                                 <div className="absolute right-0 mt-2 w-24 bg-white border rounded shadow-md">
@@ -116,7 +116,7 @@ const Navbar = () => {
                     )}
 
                     <Link to="/cart" className="relative">
-                        <img src={assets.cart_icon} className="w-5 min-w-5" alt="Cart" />
+                        <BiCart className="w-5 h-5 cursor-pointer" /> {/* Cart icon replaced with BiCart */}
                         <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">{cartCount}</p>
                     </Link>
 
