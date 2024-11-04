@@ -14,6 +14,7 @@ const Collection = ({ addToCart }) => {
   const [categoryPage, setCategoryPage] = useState(1);
   const [autoSlideIndex, setAutoSlideIndex] = useState(0);
   const [sortOrder, setSortOrder] = useState('relevant');
+  const [loading, setLoading] = useState(true);
 
   const productsPerPage = 12;
   const categoriesPerPage = 15;
@@ -31,6 +32,9 @@ const Collection = ({ addToCart }) => {
         setCategories(['All', ...categoriesData]);
       } catch (error) {
         console.error("Error fetching items or categories:", error);
+      }
+      finally {
+        setLoading(false); // Set loading to false after data fetching
       }
     };
 
@@ -209,6 +213,12 @@ const Collection = ({ addToCart }) => {
             <option value="lowToHigh">Price: Low to High</option>
           </select>
         </div>
+        {loading ? (
+        <div className="flex justify-center my-6">
+          <p className="text-gray-600">Loading products...</p>
+        </div>
+      ) : (
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {currentProducts.map((product) => (
             <div
@@ -245,8 +255,9 @@ const Collection = ({ addToCart }) => {
               </div>
             </div>
           ))}
-        </div>
 
+        </div>
+      )}
         <div className="flex justify-between items-center mt-6">
           <button
             onClick={handlePreviousPage}
@@ -267,9 +278,11 @@ const Collection = ({ addToCart }) => {
           >
             Next
           </button>
-        </div>
-      </div>
 
+        </div>
+        
+      </div>
+          
       <CartModal showModal={showModal} setShowModal={setShowModal} />
     </div>
   );
