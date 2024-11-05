@@ -35,20 +35,21 @@ const Navbar = () => {
                 method: 'POST',
                 credentials: 'include',
             });
-
+    
             if (response.ok) {
                 localStorage.removeItem('user');
                 localStorage.removeItem('isSeller'); // Remove seller flag on logout
                 setIsLoggedIn(false);
                 setIsSeller(false);
-                navigate('/');
+                navigate('/'); // Redirect to the main homepage
+                window.location.reload(); // Reload to reset the app state completely
             } else {
                 console.error('Logout failed');
             }
         } catch (error) {
             console.error('An error occurred during logout:', error);
         }
-    };
+    };    
 
     const handleSearch = () => {
         if (searchQuery.trim()) {

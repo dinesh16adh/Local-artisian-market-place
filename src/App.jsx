@@ -47,16 +47,23 @@ const App = () => {
     setProducts((prevProducts) => [...prevProducts, newProduct]);
   };
 
+  // Check if the user is a seller
+  const isSeller = localStorage.getItem('isSeller') === 'true';
+
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       <Navbar />
       <Routes>
-        <Route path="/" element={<HomePage addToCart={addToCart} />} />
+        {/* Redirect seller from '/' to '/seller' */}
+        <Route
+          path="/"
+          element={isSeller ? <Navigate to="/seller" replace /> : <HomePage addToCart={addToCart} />}
+        />
         <Route path="/cart" element={<Cart cartItems={cartItems} setCartItems={setCartItems} />} />
         <Route path="/collection" element={<Collection addToCart={addToCart} />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path='/search' element ={<SearchResults />} />
+        <Route path='/search' element={<SearchResults />} />
         <Route 
           path="/product/:productName/:productId" 
           element={
