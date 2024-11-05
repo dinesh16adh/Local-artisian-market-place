@@ -8,7 +8,7 @@ import Contact from './components/details/Contact';
 import Login from './components/login-signup/Login';
 import Signup from './components/login-signup/SignUp';
 import PlaceOrder from './components/order/PlaceOrder';
-import Order from './pages/Order';
+// import Order from './pages/Order';
 import Navbar from './components/footer-navbar/Navbar';
 import Footer from './components/footer-navbar/Footer';
 import NotFoundPage from './components/home/NotFoundPage';
@@ -78,7 +78,7 @@ const App = () => {
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/place-order" element={isLoggedIn ? <PlaceOrder cartItems={cartItems} /> : <Navigate to="/login" state={{ redirectTo: '/place-order' }} />} />
-        <Route path="/orders" element={<Order />} />
+        {/* <Route path="/orders" element={<Order />} /> */}
         <Route path="/profile" element={<UserProfile />} />
 
         {/* Seller Routes */}
