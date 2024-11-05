@@ -1,26 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import HomePage from './components/HomePage';
-import Cart from './components/Cart';
-import Collection from './components/Collection';
-import About from './components/AboutUs';
-import Contact from './components/Contact';
-import Login from './components/Login';
-import Signup from './components/SignUp';
-import PlaceOrder from './components/PlaceOrder';
+import HomePage from './components/home/HomePage';
+import Cart from './components/cart/Cart';
+import Collection from './components/collection/Collection';
+import About from './components/details/AboutUs';
+import Contact from './components/details/Contact';
+import Login from './components/login-signup/Login';
+import Signup from './components/login-signup/SignUp';
+import PlaceOrder from './components/order/PlaceOrder';
 import Order from './pages/Order';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import NotFoundPage from './components/NotFoundPage';
-import UserProfile from './components/UserProfile';
-import ProductPage from './components/ProductPage';
-import Chatbot from './components/Chatbot';
-import SearchResults from './components/SearchResults';
-
+import Navbar from './components/footer-navbar/Navbar';
+import Footer from './components/footer-navbar/Footer';
+import NotFoundPage from './components/home/NotFoundPage';
+import UserProfile from './components/userprofile/UserProfile';
+import ProductPage from './components/products/ProductPage';
+import Chatbot from './components/chatbot/Chatbot';
+import SearchResults from './components/other/SearchResults';
+import SellerPage from './components/seller/SellerPage';
+import SellerOrders from './components/seller/SellerOrders';
+import AddProductPage from './components/products/AddProductPage';
 
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [products, setProducts] = useState([]); // To store added products
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -39,16 +42,28 @@ const App = () => {
     });
   };
 
+  // Define handleAddProduct to add new products
+  const handleAddProduct = (newProduct) => {
+    setProducts((prevProducts) => [...prevProducts, newProduct]);
+  };
+
+  // Check if the user is a seller
+  const isSeller = localStorage.getItem('isSeller') === 'true';
+
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       <Navbar />
       <Routes>
-        <Route path="/" element={<HomePage addToCart={addToCart} />} />
+        {/* Redirect seller from '/' to '/seller' */}
+        <Route
+          path="/"
+          element={isSeller ? <Navigate to="/seller" replace /> : <HomePage addToCart={addToCart} />}
+        />
         <Route path="/cart" element={<Cart cartItems={cartItems} setCartItems={setCartItems} />} />
         <Route path="/collection" element={<Collection addToCart={addToCart} />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path='/search' element ={<SearchResults />} />
+        <Route path='/search' element={<SearchResults />} />
         <Route 
           path="/product/:productName/:productId" 
           element={
@@ -65,6 +80,12 @@ const App = () => {
         <Route path="/place-order" element={isLoggedIn ? <PlaceOrder cartItems={cartItems} /> : <Navigate to="/login" state={{ redirectTo: '/place-order' }} />} />
         <Route path="/orders" element={<Order />} />
         <Route path="/profile" element={<UserProfile />} />
+
+        {/* Seller Routes */}
+        <Route path="/seller" element={<SellerPage />} />
+        <Route path="/seller/orders" element={<SellerOrders />} /> {/* Orders Page for Seller */}
+        <Route path="/seller/add-product" element={<AddProductPage onAddProduct={handleAddProduct} />} /> {/* Add Product Page */}
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
