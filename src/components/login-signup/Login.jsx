@@ -33,18 +33,19 @@ const Login = ({ setIsLoggedIn }) => {
       const data = await response.json();
       const { user } = data;
       localStorage.setItem('user', JSON.stringify({ id: user.id, fullName: user.username, email: user.email }));
+      
+      const isSeller = location.state?.redirectTo === '/seller';
+      if (isSeller) {
+        localStorage.setItem('isSeller', 'true');
+      }
 
       setIsLoggedIn(true);
 
-      // Redirect based on state from previous page
-      if (location.state?.redirectAfterLogin === '/place-order') {
-        // Pass product and quantity if available
-        navigate('/place-order', { state: { product: location.state.product, quantity: location.state.quantity } });
-      } else {
-        // Default redirect to home
-        navigate('/');
-        window.location.reload();
-      }
+      // Determine redirect path, scroll to top, and reload the page
+      const redirectPath = isSeller ? '/seller' : location.state?.redirectTo || '/';
+      navigate(redirectPath);
+      window.scrollTo(0, 0); // Scroll to top of the page
+      window.location.reload(); // Reload to apply navigation changes
     } catch (err) {
       setError(err.message);
     }

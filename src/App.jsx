@@ -18,10 +18,12 @@ import Chatbot from './components/chatbot/Chatbot';
 import SearchResults from './components/other/SearchResults';
 import SellerPage from './components/seller/SellerPage';
 import SellerOrders from './components/seller/SellerOrders';
+import AddProductPage from './components/products/AddProductPage';
 
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [products, setProducts] = useState([]); // To store added products
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -38,6 +40,11 @@ const App = () => {
       }
       return [...prevItems, { ...product, quantity: 1 }];
     });
+  };
+
+  // Define handleAddProduct to add new products
+  const handleAddProduct = (newProduct) => {
+    setProducts((prevProducts) => [...prevProducts, newProduct]);
   };
 
   return (
@@ -69,7 +76,8 @@ const App = () => {
 
         {/* Seller Routes */}
         <Route path="/seller" element={<SellerPage />} />
-        <Route path="/seller/orders" element={<SellerOrders />} /> {/* New Orders Page for Seller */}
+        <Route path="/seller/orders" element={<SellerOrders />} /> {/* Orders Page for Seller */}
+        <Route path="/seller/add-product" element={<AddProductPage onAddProduct={handleAddProduct} />} /> {/* Add Product Page */}
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
