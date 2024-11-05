@@ -42,8 +42,7 @@ const Login = ({ setIsLoggedIn }) => {
       setIsLoggedIn(true);
 
       // Determine redirect path, scroll to top, and reload the page
-      const redirectPath = isSeller ? '/seller' : location.state?.redirectTo || '/';
-      navigate(redirectPath);
+      navigate('/'); // Always redirect to `/`
       window.scrollTo(0, 0); // Scroll to top of the page
       window.location.reload(); // Reload to apply navigation changes
     } catch (err) {
