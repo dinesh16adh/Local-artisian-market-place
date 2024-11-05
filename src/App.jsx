@@ -16,7 +16,8 @@ import UserProfile from './components/userprofile/UserProfile';
 import ProductPage from './components/products/ProductPage';
 import Chatbot from './components/chatbot/Chatbot';
 import SearchResults from './components/other/SearchResults';
-
+import SellerPage from './components/seller/SellerPage';
+import SellerOrders from './components/seller/SellerOrders';
 
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -65,6 +66,11 @@ const App = () => {
         <Route path="/place-order" element={isLoggedIn ? <PlaceOrder cartItems={cartItems} /> : <Navigate to="/login" state={{ redirectTo: '/place-order' }} />} />
         <Route path="/orders" element={<Order />} />
         <Route path="/profile" element={<UserProfile />} />
+
+        {/* Seller Routes */}
+        <Route path="/seller" element={<SellerPage />} />
+        <Route path="/seller/orders" element={<SellerOrders />} /> {/* New Orders Page for Seller */}
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
