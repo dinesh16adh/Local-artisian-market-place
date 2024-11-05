@@ -7,7 +7,7 @@ import { MdClose } from 'react-icons/md';
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [isSeller, setIsSeller] = useState(false); // Track if user is a seller
+    const [isSeller, setIsSeller] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const [cartCount, setCartCount] = useState(0);
     const [showSearch, setShowSearch] = useState(false);
@@ -19,7 +19,8 @@ const Navbar = () => {
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         setIsLoggedIn(!!user);
-        setIsSeller(localStorage.getItem('isSeller') === 'true'); // Set isSeller if flag exists
+        setIsSeller(localStorage.getItem('isSeller') === 'true');
+        return () => clearTimeout(hideDropdownTimeoutRef.current); // Cleanup for dropdown timeout
     }, []);
 
     const navItems = [
@@ -38,11 +39,11 @@ const Navbar = () => {
     
             if (response.ok) {
                 localStorage.removeItem('user');
-                localStorage.removeItem('isSeller'); // Remove seller flag on logout
+                localStorage.removeItem('isSeller');
                 setIsLoggedIn(false);
                 setIsSeller(false);
-                navigate('/'); // Redirect to the main homepage
-                window.location.reload(); // Reload to reset the app state completely
+                navigate('/'); 
+                window.location.reload();
             } else {
                 console.error('Logout failed');
             }
@@ -73,7 +74,6 @@ const Navbar = () => {
         setShowSearch(false);
     };
 
-    // Function to handle navigation to login with a redirect
     const handleNavigateToLogin = (redirectTo) => {
         navigate('/login', { state: { redirectTo } });
     };
@@ -83,16 +83,10 @@ const Navbar = () => {
             <div className="absolute top-6 right-4 flex gap-4 text-sm">
                 {!isLoggedIn ? (
                     <>
-                        <button
-                            onClick={() => handleNavigateToLogin('/')}
-                            className="text-gray-700 hover:text-indigo-600 transition-colors"
-                        >
+                        <button onClick={() => handleNavigateToLogin('/')} className="text-gray-700 hover:text-indigo-600 transition-colors">
                             Login to Buy
                         </button>
-                        <button
-                            onClick={() => handleNavigateToLogin('/seller')}
-                            className="text-gray-700 hover:text-indigo-600 transition-colors"
-                        >
+                        <button onClick={() => handleNavigateToLogin('/seller')} className="text-gray-700 hover:text-indigo-600 transition-colors">
                             Become a Seller
                         </button>
                         <Link to="/signup" className="text-gray-700 hover:text-indigo-600 transition-colors">
@@ -103,19 +97,19 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center justify-between py-5 px-4 font-medium">
-                {/* Logo link to default homepage (Seller or Main) */}
                 <Link to={isSeller ? '/seller' : '/'} className="flex-shrink-0">
                     <img src={assets.logo} className="w-36 cursor-pointer" alt="Logo" />
                 </Link>
 
-                {/* Conditional Nav Items */}
                 {!isSeller && (
                     <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
                         {navItems.map((item) => (
                             <NavLink 
                                 key={item.to} 
                                 to={item.to} 
-                                className={({ isActive }) => `relative flex flex-col items-center gap-1 text-gray-700`}
+                                className={({ isActive }) => 
+                                    `relative flex flex-col items-center gap-1 text-gray-700 ${isActive ? 'font-bold text-indigo-600' : ''}`
+                                }
                             >
                                 <p>{item.label}</p>
                                 {location.pathname === item.to && (
@@ -138,10 +132,7 @@ const Navbar = () => {
                                 placeholder="Search items..."
                                 autoFocus
                             />
-                            <MdClose 
-                                className="ml-2 w-5 h-5 cursor-pointer text-gray-500" 
-                                onClick={clearSearch} 
-                            />
+                            <MdClose className="ml-2 w-5 h-5 cursor-pointer text-gray-500" onClick={clearSearch} />
                         </div>
                     ) : (
                         location.pathname === '/collection' && (
