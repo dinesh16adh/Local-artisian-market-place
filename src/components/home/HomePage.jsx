@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { assets } from '../assets/assets';
+import { assets } from '../../assets/assets';
 import { Link, useNavigate } from 'react-router-dom';
-import CartModal from './CartModal';
-import Newsletterbox from './Newsletterbox';
-import ProductSlider from './ProductSlider';
-import Ourpolicies from './Ourpolicies';
+import CartModal from '../cart/CartModal';
+import Newsletterbox from '../other/Newsletterbox';
+import ProductSlider from '../products/ProductSlider';
+import Ourpolicies from '../details/Ourpolicies';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5174';
 

@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import HomePage from './components/HomePage';
-import Cart from './components/Cart';
-import Collection from './components/Collection';
-import About from './components/AboutUs';
-import Contact from './components/Contact';
-import Login from './components/Login';
-import Signup from './components/SignUp';
-import PlaceOrder from './components/PlaceOrder';
+import HomePage from './components/home/HomePage';
+import Cart from './components/cart/Cart';
+import Collection from './components/collection/Collection';
+import About from './components/details/AboutUs';
+import Contact from './components/details/Contact';
+import Login from './components/login-signup/Login';
+import Signup from './components/login-signup/SignUp';
+import PlaceOrder from './components/order/PlaceOrder';
 import Order from './pages/Order';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import NotFoundPage from './components/NotFoundPage';
-import UserProfile from './components/UserProfile';
-import ProductPage from './components/ProductPage';
-import Chatbot from './components/Chatbot';
-import SearchResults from './components/SearchResults';
+import Navbar from './components/footer-navbar/Navbar';
+import Footer from './components/footer-navbar/Footer';
+import NotFoundPage from './components/home/NotFoundPage';
+import UserProfile from './components/userprofile/UserProfile';
+import ProductPage from './components/products/ProductPage';
+import Chatbot from './components/chatbot/Chatbot';
+import SearchResults from './components/other/SearchResults';
 
 
 const App = () => {

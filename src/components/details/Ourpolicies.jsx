@@ -1,10 +1,10 @@
 import React from 'react';
 import { FaExchangeAlt, FaRegClock, FaHeadset } from 'react-icons/fa';
-import esewaLogo from '../assets/payments/esewa.png';
-import imepayLogo from '../assets/payments/imepay.png';
-import visaLogo from '../assets/payments/visa.png';
-import mastercardLogo from '../assets/payments/mastercard.png';
-import pciPassLogo from '../assets/payments/pci-pass.png';
+import esewaLogo from '../../assets/payments/esewa.png';
+import imepayLogo from '../../assets/payments/imepay.png';
+import visaLogo from '../../assets/payments/visa.png';
+import mastercardLogo from '../../assets/payments/mastercard.png';
+import pciPassLogo from '../../assets/payments/pci-pass.png';
 
 const Ourpolicies = () => {
   return (

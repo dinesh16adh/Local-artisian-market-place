@@ -1,8 +1,8 @@
 import React from 'react';
 import { FaLinkedin, FaGithub, FaGlobe } from 'react-icons/fa'; // Import icons from react-icons
-import NidinaImage from '../assets/about-us/nidina.webp';
-import DineshImage from '../assets/about-us/dinesh.jpeg';
-import BikalpaImage from '../assets/about-us/bikalpa.jpeg';
+import NidinaImage from '../../assets/about-us/nidina.webp';
+import DineshImage from '../../assets/about-us/dinesh.jpeg';
+import BikalpaImage from '../../assets/about-us/bikalpa.jpeg';
 
 const teamMembers = [
   {

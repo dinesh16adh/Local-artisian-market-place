@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { assets } from '../assets/assets';
+import { assets } from '../../assets/assets';
 import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { BiSearch, BiCart, BiUser } from 'react-icons/bi';
 import { MdClose } from 'react-icons/md'; 

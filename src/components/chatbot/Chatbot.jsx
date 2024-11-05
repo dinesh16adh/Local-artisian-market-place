@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaTimes, FaComments } from 'react-icons/fa';
-import { assets } from '../assets/assets'; // Ensure you have the correct path to your assets
+import { assets } from '../../assets/assets'; // Ensure you have the correct path to your assets
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([]);
