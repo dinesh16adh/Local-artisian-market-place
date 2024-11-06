@@ -6,29 +6,29 @@ const JustForYou = ({ items = [], loading, handleProductClick, handleAddToCart, 
   const latestItems = items.slice(0, 9);
 
   return (
-    <div className="px-4 md:px-10 bg-gray-100 py-10 rounded-lg shadow-lg"> {/* Background styling */}
-      <h2 className="text-3xl font-bold mb-4 text-left">Just for You</h2>
+    <div className="bg-gray-50 px-6 md:px-12 py-10 rounded-lg shadow-md"> {/* Subtle white background for the whole component */}
+      <h2 className="text-4xl font-bold mb-6 text-left text-gray-800">Just for You</h2>
       {loading ? (
         <div className="flex justify-center my-6">
-          <p className="text-gray-600">Loading products...</p>
+          <p className="text-gray-600 text-lg">Loading products...</p>
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {latestItems.map((product) => (
               <div 
                 key={product.id} 
-                className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300 transform hover:scale-105"
+                className="bg-white p-4 rounded-xl shadow-md border border-gray-200 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300 transform hover:scale-105"
                 onClick={() => handleProductClick(product)}
               >
                 <ProductSlider images={product.photos.map(photo => photo.url)} />
                 <div className="p-4">
-                  <h3 className="font-bold text-lg mb-2">{product.title}</h3>
-                  <p className="text-gray-600 text-sm mb-2">{product.description}</p>
+                  <h3 className="font-semibold text-lg text-gray-800 mb-1">{product.title}</h3>
+                  <p className="text-gray-600 text-sm mb-3">{product.description}</p>
                   <p className="text-gray-800 font-semibold mb-2">Price: ${product.price}</p>
                   
                   {/* Rating Display */}
-                  {product.rating && renderStars(product.rating)}
+                  {product.rating && <div className="mb-2">{renderStars(product.rating)}</div>}
         
                   {/* Stock Display with Conditional Styling */}
                   <p className={`text-sm font-semibold ${product.inStock > 5 ? 'text-green-600' : 'text-red-600'}`}>
@@ -37,7 +37,7 @@ const JustForYou = ({ items = [], loading, handleProductClick, handleAddToCart, 
         
                   <button
                     onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}
-                    className="mt-2 w-full bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-500 transition-colors"
+                    className="mt-3 w-full bg-indigo-600 text-white py-2 rounded-md font-medium hover:bg-indigo-500 transition-colors duration-200"
                   >
                     Add to Cart
                   </button>
@@ -46,10 +46,10 @@ const JustForYou = ({ items = [], loading, handleProductClick, handleAddToCart, 
             ))}
           </div>
           {items.length > 9 && (
-            <div className="flex justify-center mt-6">
+            <div className="flex justify-center mt-8">
               <Link
                 to="/collection"
-                className="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow-md text-sm font-semibold hover:bg-indigo-500 transition-colors"
+                className="px-6 py-2 bg-indigo-600 text-white rounded-full shadow-md text-base font-semibold hover:bg-indigo-500 transition-colors"
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               >
                 See More Products
