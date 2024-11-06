@@ -32,9 +32,8 @@ const Collection = ({ addToCart }) => {
         setCategories(['All', ...categoriesData]);
       } catch (error) {
         console.error("Error fetching items or categories:", error);
-      }
-      finally {
-        setLoading(false); // Set loading to false after data fetching
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -43,14 +42,7 @@ const Collection = ({ addToCart }) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setAutoSlideIndex((prevIndex) => prevIndex + 1);
-    }, 5000);
-    return () => clearInterval(intervalId);
-  }, []);
+  }, [currentPage, categoryPage]);
 
   const filteredProducts = selectedCategory === 'All'
     ? items
@@ -70,11 +62,11 @@ const Collection = ({ addToCart }) => {
   const indexOfFirstCategory = indexOfLastCategory - categoriesPerPage;
   const currentCategories = categories.slice(indexOfFirstCategory, indexOfLastCategory);
 
-  const handleNextPage = () => setCurrentPage((prev) => prev + 1);
-  const handlePreviousPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const handleNextPage = () => setCurrentPage(prev => prev + 1);
+  const handlePreviousPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
 
-  const handleNextCategoryPage = () => setCategoryPage((prev) => prev + 1);
-  const handlePreviousCategoryPage = () => setCategoryPage((prev) => Math.max(prev - 1, 1));
+  const handleNextCategoryPage = () => setCategoryPage(prev => prev + 1);
+  const handlePreviousCategoryPage = () => setCategoryPage(prev => Math.max(prev - 1, 1));
 
   const handleProductClick = (product) => {
     const productName = product.title.toLowerCase().replace(/\s+/g, '-');
@@ -88,8 +80,8 @@ const Collection = ({ addToCart }) => {
   };
 
   const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-    setCurrentPage(1);
+    navigate(`/category/${category}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setShowSidebar(false);
   };
 
@@ -214,50 +206,48 @@ const Collection = ({ addToCart }) => {
           </select>
         </div>
         {loading ? (
-        <div className="flex justify-center my-6">
-          <p className="text-gray-600">Loading products...</p>
-        </div>
-      ) : (
+          <div className="flex justify-center my-6">
+            <p className="text-gray-600">Loading products...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {currentProducts.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer hover:shadow-xl transform transition-all duration-300 hover:scale-105"
+                onClick={() => handleProductClick(product)}
+              >
+                <img
+                  src={product.photos[autoSlideIndex % product.photos.length]?.url}
+                  alt={product.title}
+                  className="w-full h-48 object-cover rounded-t-lg"
+                />
+                <div className="p-5">
+                  <h3 className="font-bold text-xl mb-2 text-gray-800">{product.title}</h3>
+                  <p className="text-gray-600 mb-2 text-sm">{product.description}</p>
+                  <p className="text-gray-800 font-semibold mb-4">Price: ${product.price}</p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {currentProducts.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer hover:shadow-xl transform transition-all duration-300 hover:scale-105"
-              onClick={() => handleProductClick(product)}
-            >
-              <img
-                src={product.photos[autoSlideIndex % product.photos.length]?.url}
-                alt={product.title}
-                className="w-full h-48 object-cover rounded-t-lg"
-              />
-              <div className="p-5">
-                <h3 className="font-bold text-xl mb-2 text-gray-800">{product.title}</h3>
-                <p className="text-gray-600 mb-2 text-sm">{product.description}</p>
-                <p className="text-gray-800 font-semibold mb-4">Price: ${product.price}</p>
+                  {product.rating && renderStars(product.rating)}
 
-                {product.rating && renderStars(product.rating)}
+                  <p
+                    className={`text-sm font-semibold ${
+                      product.inStock > 5 ? 'text-green-600' : 'text-red-600'
+                    }`}
+                  >
+                    {product.inStock > 5 ? `In Stock: ${product.inStock}` : 'Low Stock'}
+                  </p>
 
-                <p
-                  className={`text-sm font-semibold ${
-                    product.inStock > 5 ? 'text-green-600' : 'text-red-600'
-                  }`}
-                >
-                  {product.inStock > 5 ? `In Stock: ${product.inStock}` : 'Low Stock'}
-                </p>
-
-                <button
-                  onClick={(e) => handleAddToCart(product, e)}
-                  className="w-full py-2 mt-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-500 transition-colors"
-                >
-                  Add to Cart
-                </button>
+                  <button
+                    onClick={(e) => handleAddToCart(product, e)}
+                    className="w-full py-2 mt-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-500 transition-colors"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-
-        </div>
-      )}
+            ))}
+          </div>
+        )}
         <div className="flex justify-between items-center mt-6">
           <button
             onClick={handlePreviousPage}
@@ -278,12 +268,10 @@ const Collection = ({ addToCart }) => {
           >
             Next
           </button>
-
         </div>
-        
       </div>
-          
-      <CartModal showModal={showModal} setShowModal={setShowModal} />
+
+      {showModal && <CartModal showModal={showModal} setShowModal={setShowModal} />}
     </div>
   );
 };
