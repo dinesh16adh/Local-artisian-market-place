@@ -33,7 +33,7 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Prevent navbar from blocking banner
+ 
   useEffect(() => {
     const navbar = document.querySelector(".navbar");
     if (navbar) {
