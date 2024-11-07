@@ -9,8 +9,9 @@ import Login from './components/login-signup/Login';
 import Signup from './components/login-signup/SignUp';
 import PlaceOrder from './components/order/PlaceOrder';
 // import Order from './pages/Order';
-import Navbar from './components/footer-navbar/Navbar';
-import Footer from './components/footer-navbar/Footer';
+import './index.css';
+import Navbar from './components/nav-bar/Navbar';
+import Footer from './components/footer/Footer';
 import NotFoundPage from './components/home/NotFoundPage';
 import UserProfile from './components/userprofile/UserProfile';
 import ProductPage from './components/products/ProductPage';
@@ -53,6 +54,7 @@ const App = () => {
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       <Navbar />
+      <main className="main-content">
       <Routes>
         {/* Redirect seller from '/' to '/seller' */}
         <Route
@@ -89,9 +91,9 @@ const App = () => {
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-
       <Footer />
       <Chatbot />
+      </main>
     </div>
   );
 };
