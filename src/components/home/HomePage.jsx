@@ -5,19 +5,20 @@ import CartModal from '../cart/CartModal';
 import Newsletterbox from '../other/Newsletterbox';
 import ProductSlider from '../products/ProductSlider';
 import Ourpolicies from '../details/Ourpolicies';
+import TopSales from './TopSales';
+import JustForYou from './JustForYou'; 
+import ShopByCategory from './ShopByCategory';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5174';
 
 const HomePage = ({ addToCart }) => {
   const [items, setItems] = useState([]);
-  const [categories, setCategories] = useState(['All']);
-  const [visibleProducts, setVisibleProducts] = useState(12);
-  const [categoryFilter, setCategoryFilter] = useState('All');
+  const [categories, setCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showNewsletterPopup, setShowNewsletterPopup] = useState(false);
   const [userName, setUserName] = useState(null);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -36,11 +37,11 @@ const HomePage = ({ addToCart }) => {
         
         const categoriesResponse = await fetch(`${backendUrl}/categories`);
         const categoriesData = await categoriesResponse.json();
-        setCategories(['All', ...categoriesData]);
+        setCategories(categoriesData);
       } catch (error) {
         console.error("Error fetching items or categories:", error);
       } finally {
-        setLoading(false); // Set loading to false after data fetching
+        setLoading(false);
       }
     };
 
@@ -68,10 +69,6 @@ const HomePage = ({ addToCart }) => {
     }
   }, []);
 
-  const filteredProducts = categoryFilter === 'All' 
-    ? items 
-    : items.filter(item => item.category === categoryFilter);
-
   const handleAddToCart = (product) => {
     addToCart(product);
     setShowModal(true);
@@ -80,13 +77,13 @@ const HomePage = ({ addToCart }) => {
   const handleProductClick = (product) => {
     navigate(`/product/${product.title.toLowerCase().replace(/\s+/g, '-')}/${product.id}`);
   };
-
+  const handleCategoryClick = (category) => {
+    navigate(`/category/${category}`);
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top after navigating
+  };
   const closeNewsletterPopup = () => {
     setShowNewsletterPopup(false);
   };
-
-  const limitedCategories = categories.slice(0, 5);
-  const hasMoreCategories = categories.length > 5;
 
   const renderStars = (rating) => {
     const filledStars = Math.floor(rating);
@@ -134,80 +131,25 @@ const HomePage = ({ addToCart }) => {
         </div>
       </div>
 
-      {/* Compact Inline Newsletter Box */}
-      {!showNewsletterPopup && <Newsletterbox mode="inline" />}
+      {/* Top Sales Section */}
+      <TopSales addToCart={addToCart} />
 
-      {/* Category Filter */}
-      <div className="flex justify-center my-6 flex-wrap gap-2">
-        {limitedCategories.map((category) => (
-          <button
-            key={category}
-            onClick={() => setCategoryFilter(category)}
-            className={`px-4 py-2 border ${categoryFilter === category ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-gray-600'} rounded-lg shadow-sm hover:bg-indigo-500 hover:text-white transition-all`}
-          >
-            {category}
-          </button>
-        ))}
-        {hasMoreCategories && (
-          <Link to="/collection" className="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-sm hover:bg-indigo-500 transition-all">
-            More
-          </Link>
-        )}
-      </div>
-
-      {/* Loading State */}
-      {loading ? (
-        <div className="flex justify-center my-6">
-          <p className="text-gray-600">Loading products...</p>
-        </div>
-      ) : (
-        // Product Grid
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4 md:p-10">
-          {filteredProducts.slice(0, visibleProducts).map((product) => (
-            <div 
-              key={product.id} 
-              className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300 transform hover:scale-105"
-              onClick={() => handleProductClick(product)}
-            >
-              <ProductSlider images={product.photos.map(photo => photo.url)} />
-              <div className="p-5">
-                <h3 className="font-bold text-xl mb-2">{product.title}</h3>
-                <p className="text-gray-600 text-sm mb-2">{product.description}</p>
-                <p className="text-gray-800 font-semibold mb-2">Price: ${product.price}</p>
-                
-                {/* Rating Display */}
-                {product.rating && renderStars(product.rating)}
-
-                {/* Stock Display with Conditional Styling */}
-                <p className={`text-sm font-semibold ${product.inStock > 5 ? 'text-green-600' : 'text-red-600'}`}>
-                  {product.inStock > 5 ? `In Stock: ${product.inStock}` : 'Low Stock'}
-                </p>
-
-                <button
-                  onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}
-                  className="mt-2 w-full bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-500 transition-colors"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {visibleProducts < filteredProducts.length && (
-        <div className="flex justify-center my-6">
-          <Link
-            to="/collection"
-            className="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-500 transition-colors"
-            onClick={() => setVisibleProducts(visibleProducts + 12)}
-          >
-            Load More
-          </Link>
-        </div>
-      )}
-
+      {/* Shop by Category Section */}
+      <ShopByCategory 
+        categories={categories} 
+        items={items} 
+        handleCategoryClick={handleCategoryClick} 
+      />
+      {/* Just for You Section */}
+      <JustForYou 
+        items={items} 
+        loading={loading} 
+        handleProductClick={handleProductClick} 
+        handleAddToCart={handleAddToCart} 
+        renderStars={renderStars} 
+      />
       <Ourpolicies />
+      {!showNewsletterPopup && <Newsletterbox mode="inline" />}
       {showModal && <CartModal closeModal={() => setShowModal(false)} />}
     </div>
   );

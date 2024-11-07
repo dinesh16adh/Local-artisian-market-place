@@ -19,7 +19,7 @@ import SearchResults from './components/other/SearchResults';
 import SellerPage from './components/seller/SellerPage';
 import SellerOrders from './components/seller/SellerOrders';
 import AddProductPage from './components/products/AddProductPage';
-
+import CategoryPage from './components/collection/CategoryPage';
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -75,6 +75,7 @@ const App = () => {
             />
           } 
         />
+        <Route path="/category/:category" element={<CategoryPage />} />
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/place-order" element={isLoggedIn ? <PlaceOrder cartItems={cartItems} /> : <Navigate to="/login" state={{ redirectTo: '/place-order' }} />} />
