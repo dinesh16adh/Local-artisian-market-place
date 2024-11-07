@@ -1,4 +1,4 @@
-// src/components/seller/SellerOrders.js
+
 import React, { useState, useEffect } from 'react';
 import OrderList from './OrderList';
 

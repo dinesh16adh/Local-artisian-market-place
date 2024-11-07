@@ -1,4 +1,4 @@
-// src/components/products/SellerProductForm.js
+
 import React, { useState } from 'react';
 
 const SellerProductForm = () => {

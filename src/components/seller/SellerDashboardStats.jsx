@@ -1,4 +1,4 @@
-// src/components/seller/SellerDashboardStats.js
+
 import React from 'react';
 
 const SellerDashboardStats = ({ products, orders }) => {

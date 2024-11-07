@@ -1,4 +1,4 @@
-// src/components/seller/OrderList.js
+
 import React from 'react';
 
 const OrderList = ({ orders }) => {
