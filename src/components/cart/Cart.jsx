@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaTrash } from 'react-icons/fa'; // Import trash icon
+import { FaTrash } from 'react-icons/fa'; 
 
 const Cart = ({ cartItems, setCartItems }) => {
   const [user, setUser] = useState(null);
-  const [showLoginModal, setShowLoginModal] = useState(false); // State to control modal visibility
+  const [showLoginModal, setShowLoginModal] = useState(false); 
   const navigate = useNavigate();
 
   // Check if user is logged in
@@ -14,7 +14,7 @@ const Cart = ({ cartItems, setCartItems }) => {
   }, []);
 
   const cartTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  const shippingFee = 10.00; // Assuming a fixed shipping fee
+  const shippingFee = 10.00; //fixed shipping fee
   const grandTotal = cartTotal + shippingFee;
 
   const increaseQuantity = (itemId) => {
@@ -86,7 +86,7 @@ const Cart = ({ cartItems, setCartItems }) => {
                   onClick={() => removeItem(item.id)}
                   className="mt-2 text-red-600 flex items-center hover:underline"
                 >
-                  <FaTrash className="text-xl mr-2" /> {/* Trash icon with margin */}
+                  <FaTrash className="text-xl mr-2" /> 
                   Remove
                 </button>
                 <p className="text-lg font-semibold text-indigo-600 mt-2">
@@ -110,7 +110,7 @@ const Cart = ({ cartItems, setCartItems }) => {
             </div>
             <button
               onClick={handlePayment}
-              className="bg-black text-white px-6 py-3 rounded-lg font-semibold mt-4 shadow-md hover:bg-gray-800 transition-colors"
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold mt-4 shadow-md hover:bg-blue-500 transition-colors"
             >
               Proceed to Checkout
             </button>
