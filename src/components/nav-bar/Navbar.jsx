@@ -96,7 +96,7 @@ const Navbar = () => {
           </div>
 
           {/* Right Section - AuthButtons/UserMenu and CartIcon */}
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-0 md:gap-4">
             {showSearch ? (
               <SearchBar
                 searchQuery={searchQuery}
@@ -126,19 +126,16 @@ const Navbar = () => {
           </div>
         </div>
 
+
         {/* Auth and Navigation Items for smaller screens */}
         <div
           className={`md:hidden flex flex-col items-center ${
-            isScrolled ? "-mt-0 space-y-2" : "-mt-10 space-y-3"
+            isScrolled ? "-mt-1 space-y-4" : "-mt-8 space-y-3"
           }`}
         >
           {/* Conditionally render AuthButtons based on scroll */}
-          {!isScrolled && (
-            isLoggedIn ? (
-              <UserMenu isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
-            ) : (
-              <AuthButtons handleNavigateToLogin={handleNavigateToLogin} />
-            )
+          {!isScrolled && !isLoggedIn && (
+            <AuthButtons handleNavigateToLogin={handleNavigateToLogin} />
           )}
           <NavItems navItems={navItems} isSeller={isSeller} />
         </div>
