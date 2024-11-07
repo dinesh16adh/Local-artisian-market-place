@@ -91,9 +91,9 @@ const App = () => {
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      </main>        
       <Footer />
       <Chatbot />
-      </main>
     </div>
   );
 };
