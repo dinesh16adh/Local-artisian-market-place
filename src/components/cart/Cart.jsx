@@ -13,6 +13,8 @@ const Cart = ({ cartItems, setCartItems }) => {
   }, []);
 
   const cartTotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const shippingFee = 10.00; // Assuming a fixed shipping fee
+  const grandTotal = cartTotal + shippingFee;
 
   const increaseQuantity = (itemId) => {
     setCartItems((prevItems) =>
@@ -91,22 +93,26 @@ const Cart = ({ cartItems, setCartItems }) => {
               </div>
             </div>
           ))}
-          <div className="text-right mt-6">
-            <h3 className="text-2xl font-bold text-gray-800">
-              Cart Total: ${cartTotal.toFixed(2)}
-            </h3>
+          <div className="text-right mt-6 border-t pt-4">
+            <div className="flex justify-between text-lg">
+              <span>Subtotal</span>
+              <span>${cartTotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-lg">
+              <span>Shipping Fee</span>
+              <span>${shippingFee.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-xl font-bold mt-2">
+              <span>Total</span>
+              <span>${grandTotal.toFixed(2)}</span>
+            </div>
+            <button
+              onClick={handlePayment}
+              className="bg-black text-white px-6 py-3 rounded-lg font-semibold mt-4 shadow-md hover:bg-gray-800 transition-colors"
+            >
+              Proceed to Checkout
+            </button>
           </div>
-        </div>
-      )}
-
-      {cartItems.length > 0 && (
-        <div className="text-right mt-6">
-          <button
-            onClick={handlePayment}
-            className="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-indigo-500 transition-colors"
-          >
-            Pay Now
-          </button>
         </div>
       )}
 
