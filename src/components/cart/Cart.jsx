@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaTrash } from 'react-icons/fa'; // Import trash icon
 
 const Cart = ({ cartItems, setCartItems }) => {
   const [user, setUser] = useState(null);
@@ -83,8 +84,9 @@ const Cart = ({ cartItems, setCartItems }) => {
                 </div>
                 <button
                   onClick={() => removeItem(item.id)}
-                  className="mt-2 text-red-600 hover:underline"
+                  className="mt-2 text-red-600 flex items-center hover:underline"
                 >
+                  <FaTrash className="text-xl mr-2" /> {/* Trash icon with margin */}
                   Remove
                 </button>
                 <p className="text-lg font-semibold text-indigo-600 mt-2">
