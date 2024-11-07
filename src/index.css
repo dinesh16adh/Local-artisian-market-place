@@ -17,6 +17,3 @@ a.active hr{
   font-weight: 400;
   font-style: normal;
 }
-.main-content {
-  padding-top: 85px; /* Adjust this value to match the height of your navbar */
-}
