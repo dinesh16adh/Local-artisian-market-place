@@ -21,13 +21,13 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
 
   // Determine items to display in the order summary
   const orderItems = product
-    ? [{ ...product, quantity }] // If coming from ProductPage, use the single product and quantity
-    : cartItems; // Otherwise, use the full cart items
+    ? [{ ...product, quantity }]
+    : cartItems;
 
   // Total and delivery fee calculations
   const itemsTotal = orderItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  const deliveryFee = 1.25; // Updated to dollar equivalent
-  const grandTotal = itemsTotal + deliveryFee;
+  const Shipping_charge = 10;
+  const grandTotal = itemsTotal + Shipping_charge;
 
   // Handle Pay Now button click
   const handlePayNow = () => {
@@ -36,7 +36,6 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
     } else {
       alert('Proceeding with payment...');
       // Add payment logic here
-      // Example: Update stock, clear cart, etc.
     }
   };
 
@@ -47,13 +46,16 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
   };
 
   return (
-    <div className="p-10 max-w-2xl mx-auto bg-white shadow-lg rounded-lg">
-      <h2 className="text-3xl font-bold mb-4">Place Order</h2>
-      
-      {/* Shipping Address Section */}
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold">Shipping Address</h3>
-        <button className="text-blue-600 text-sm underline" onClick={() => navigate('/profile')}>
+    <div className="p-8 max-w-3xl mx-auto bg-gray-50 shadow-lg rounded-lg space-y-8">
+      <h2 className="text-2xl font-bold text-gray-800">Place Order</h2>
+
+      {/* Delivery Information Section */}
+      <div className="p-4 bg-white rounded-lg shadow-md">
+        <h3 className="text-lg font-semibold mb-2">Delivery Information</h3>
+        <button
+          onClick={() => navigate('/profile')}
+          className="text-blue-600 text-sm underline"
+        >
           EDIT
         </button>
         <p>{user?.fullName || 'Guest'}</p>
@@ -61,9 +63,9 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
         <p>{user?.address || 'No address available'}</p>
       </div>
 
-      {/* Order Summary */}
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold">Order Summary</h3>
+      {/* Cart Totals Section */}
+      <div className="p-4 bg-white rounded-lg shadow-md">
+        <h3 className="text-lg font-semibold mb-2">Cart Totals</h3>
         {orderItems.map((item, index) => (
           <div key={index} className="flex justify-between items-center border-b py-3">
             <span>{item.title} x {item.quantity}</span>
@@ -75,8 +77,8 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
           <span>${itemsTotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between items-center mt-1">
-          <span>Delivery Fee</span>
-          <span>${deliveryFee.toFixed(2)}</span>
+          <span>Shipping charge</span>
+          <span>${Shipping_charge.toFixed(2)}</span>
         </div>
         <div className="flex justify-between items-center mt-4 text-lg font-bold">
           <span>Total</span>
@@ -84,9 +86,9 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
         </div>
       </div>
 
-      {/* Payment Options */}
-      <div className="mb-4">
-        <h3 className="text-xl font-semibold mb-2">Choose Payment Method</h3>
+      {/* Payment Method Section */}
+      <div className="p-4 bg-white rounded-lg shadow-md">
+        <h3 className="text-lg font-semibold mb-2">Payment Method</h3>
         <label className="block mb-2">
           <input type="radio" name="payment" value="prepayment" className="mr-2" />
           Prepayment
@@ -100,7 +102,7 @@ const PlaceOrder = ({ cartItems, setCartItems }) => {
       {/* Pay Now Button */}
       <button
         onClick={handlePayNow}
-        className="w-full bg-indigo-600 text-white py-2 rounded-lg font-medium hover:bg-indigo-500 transition-colors"
+        className="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-500 transition-colors"
       >
         Pay Now
       </button>
