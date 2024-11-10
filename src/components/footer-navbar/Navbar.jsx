@@ -99,12 +99,12 @@ const Navbar = () => {
     navigate("/login", { state: { redirectTo } });
   };
 
-  return (
+  return(
     <div className="relative h-10">
         {/* Navbar container */}
         <div
         className={`navbar fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300${
-            scrolled ? "p-0 text-xs shadow-md" : "py-5 shadow-none"
+            scrolled ? "py-3 text-xs shadow-md" : "py-5 shadow-none my-0"
         }`}
         >
             <div className="absolute top-6 right-4 flex gap-4 text-sm">
