@@ -19,8 +19,8 @@ const teamMembers = [
   },
   {
     name: 'Dinesh Adhikari',
-    position: 'UI/UX and Frontend Developer',
-    bio: 'Dinesh is a talented designer who brings ideas to life with her design skills. She focuses on creating beautiful, user-friendly interfaces that make our products stand out.',
+    position: 'Frontend Developer and UI/UX ',
+    bio: 'Dinesh is a skilled Front-End Developer with a keen eye for design, crafting responsive, user-friendly interfaces that enhance our product`s appeal and usability.',
     image: DineshImage,
     nameStyle: 'text-teal-600 font-semibold italic',
     social: {
