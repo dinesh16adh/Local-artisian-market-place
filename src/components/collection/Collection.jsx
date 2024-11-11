@@ -48,12 +48,28 @@ const Collection = ({ addToCart }) => {
     ? items
     : items.filter(product => product.category === selectedCategory);
 
-  const sortedProducts = filteredProducts.sort((a, b) => {
-    if (sortOrder === 'highToLow') return b.price - a.price;
-    if (sortOrder === 'lowToHigh') return a.price - b.price;
-    return 0;
-  });
+    const sortedProducts = (function insertionSortArray() {
+      
+      function insertionSort(arr, sortOrder = 'lowToHigh') {
+        for (let i = 1; i < arr.length; i++) {
+          let currentProduct = arr[i];
+          let j = i - 1;
+          while (j >= 0 && ((sortOrder === 'lowToHigh' && arr[j].price > currentProduct.price) ||
+                            (sortOrder === 'highToLow' && arr[j].price < currentProduct.price))) {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+          }
 
+          arr[j + 1] = currentProduct;
+        }
+    
+        return arr;
+      }
+      return insertionSort([...filteredProducts], sortOrder);
+    })();
+
+    console.log(sortedProducts);
+    
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = sortedProducts.slice(indexOfFirstProduct, indexOfLastProduct);
