@@ -1,16 +1,21 @@
-// main.jsx
 import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { StrictMode } from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import './index.css'; // Main CSS for your app
-import App from './App.jsx'; // Main App component
+import ReactDOM from 'react-dom/client'; // Updated for React 18
+import App from './App';
+import { ShopProvider } from './context/ShopContext';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-// Render the App component inside the #root div
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <BrowserRouter basename="/Local-artisian-market-place">
-      <App />
-    </BrowserRouter>
-  </StrictMode>
+// Import global CSS (if any)
+import './index.css';
+
+// Create root using ReactDOM.createRoot
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
+  <React.StrictMode>
+    <ShopProvider>
+      <Router basename="/Local-artisian-market-place">
+        <App />
+      </Router>
+    </ShopProvider>
+  </React.StrictMode>
 );

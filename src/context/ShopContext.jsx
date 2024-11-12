@@ -1,15 +1,20 @@
-// import React, { createContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 
-// // Create ShopContext
-// export const ShopContext = createContext();
 
-// export const ShopProvider = ({ children }) => {
-//   const [search, setSearch] = useState('');
-//   const [showSearch, setShowSearch] = useState(false);
+export const ShopContext = createContext();
 
-//   return (
-//     <ShopContext.Provider value={{ search, setSearch, showSearch, setShowSearch }}>
-//       {children}
-//     </ShopContext.Provider>
-//   );
-// };
+export const ShopProvider = ({ children }) => {
+  const [search, setSearch] = useState('');
+  const [showSearch, setShowSearch] = useState(true);
+  const value = {
+    search,setSearch,showSearch,setShowSearch
+  }
+
+  return (
+    <ShopContext.Provider value={{ search, setSearch, showSearch, setShowSearch }}>
+      {children}
+    </ShopContext.Provider>
+  );
+};
+
+export default ShopContext;

@@ -20,6 +20,7 @@ import SellerPage from './components/seller/SellerPage';
 import SellerOrders from './components/seller/SellerOrders';
 import AddProductPage from './components/products/AddProductPage';
 import CategoryPage from './components/collection/CategoryPage';
+import SearchBar from './components/SearchBar';
 const App = () => {
   const [cartItems, setCartItems] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -53,6 +54,7 @@ const App = () => {
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       <Navbar />
+      <SearchBar />
       <Routes>
         {/* Redirect seller from '/' to '/seller' */}
         <Route
