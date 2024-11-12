@@ -4,7 +4,7 @@ import App from './App';
 import { ShopProvider } from './context/ShopContext';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-// Import global CSS (if any)
+
 import './index.css';
 
 // Create root using ReactDOM.createRoot

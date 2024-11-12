@@ -17,7 +17,7 @@ const SearchBar = () => {
         />
         <FaSearch className="ml-2 text-gray-500 cursor-pointer" />
       </div>
-      {/* X icon outside the input container with gray-800 color */}
+     
       <FaTimes
         className="inline w-3 cursor-pointer text-gray-500"  // Changed color to gray-800
         onClick={() => {
