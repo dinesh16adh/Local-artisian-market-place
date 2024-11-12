@@ -5,7 +5,7 @@ export const ShopContext = createContext();
 
 export const ShopProvider = ({ children }) => {
   const [search, setSearch] = useState('');
-  const [showSearch, setShowSearch] = useState(true);
+  const [showSearch, setShowSearch] = useState(false);
   const value = {
     search,setSearch,showSearch,setShowSearch
   }

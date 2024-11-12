@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { assets } from "../../assets/assets";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { BiSearch, BiCart, BiUser } from "react-icons/bi";
 import { MdClose } from "react-icons/md";
+import ShopContext from "../../context/ShopContext";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
@@ -16,6 +17,8 @@ const Navbar = () => {
   const location = useLocation();
   const hideDropdownTimeoutRef = useRef(null);
 
+  const {setShowSearch}=useContext(ShopContext)
+// ()
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     setIsLoggedIn(!!user);
@@ -154,9 +157,9 @@ const Navbar = () => {
           )}
 
           <div className="flex items-center gap-6">
-            {location.pathname === "/collection" && (
-              <BiSearch className="w-5 h-5 cursor-pointer" />
-            )}
+            
+              <BiSearch onClick={()=>setShowSearch(true)} className="w-5 h-5 cursor-pointer" />
+            
 
             {isLoggedIn && (
               <div
