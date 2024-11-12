@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CartModal from '../cart/CartModal';
+import ShopContext from '../../context/ShopContext';
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5174';
 
 const Collection = ({ addToCart }) => {
+  const { search } = useContext(ShopContext); // Get the search query from context
   const [items, setItems] = useState([]);
   const [categories, setCategories] = useState(['All']);
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -44,32 +46,32 @@ const Collection = ({ addToCart }) => {
     window.scrollTo(0, 0);
   }, [currentPage, categoryPage]);
 
-  const filteredProducts = selectedCategory === 'All'
-    ? items
-    : items.filter(product => product.category === selectedCategory);
+  // Filter products based on the selected category and search term
+  const filteredProducts = items.filter(product => {
+    const isCategoryMatch = selectedCategory === 'All' || product.category === selectedCategory;
+    const isSearchMatch = product.title.toLowerCase().includes(search.toLowerCase());
+    return isCategoryMatch && isSearchMatch;
+  });
 
-    const sortedProducts = (function insertionSortArray() {
-      
-      function insertionSort(arr, sortOrder = 'lowToHigh') {
-        for (let i = 1; i < arr.length; i++) {
-          let currentProduct = arr[i];
-          let j = i - 1;
-          while (j >= 0 && ((sortOrder === 'lowToHigh' && arr[j].price > currentProduct.price) ||
-                            (sortOrder === 'highToLow' && arr[j].price < currentProduct.price))) {
-            arr[j + 1] = arr[j];
-            j = j - 1;
-          }
-
-          arr[j + 1] = currentProduct;
+  const sortedProducts = (function insertionSortArray() {
+    function insertionSort(arr, sortOrder = 'lowToHigh') {
+      for (let i = 1; i < arr.length; i++) {
+        let currentProduct = arr[i];
+        let j = i - 1;
+        while (j >= 0 && ((sortOrder === 'lowToHigh' && arr[j].price > currentProduct.price) ||
+                          (sortOrder === 'highToLow' && arr[j].price < currentProduct.price))) {
+          arr[j + 1] = arr[j];
+          j = j - 1;
         }
-    
-        return arr;
-      }
-      return insertionSort([...filteredProducts], sortOrder);
-    })();
 
-    console.log(sortedProducts);
-    
+        arr[j + 1] = currentProduct;
+      }
+  
+      return arr;
+    }
+    return insertionSort([...filteredProducts], sortOrder);
+  })();
+
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = sortedProducts.slice(indexOfFirstProduct, indexOfLastProduct);
@@ -117,6 +119,7 @@ const Collection = ({ addToCart }) => {
       </div>
     );
   };
+    
 
   return (
     <div className="flex flex-col md:flex-row p-6 bg-gray-50 min-h-screen">
