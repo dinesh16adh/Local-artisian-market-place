@@ -168,7 +168,6 @@ src/
 - **`zoomStyle`**: Sets the zoom effect styling based on cursor position.
 
 ---
-
 ### 9. `ProductSlider.jsx`
 
 **Purpose**: A standalone component for sliding through images in a carousel format, used in `ProductModal` and `Collection`.
@@ -176,7 +175,6 @@ src/
 **Features**:
 - Autoplay functionality that cycles through images every 5 seconds.
 - Users can manually control the carousel, which stops auto-sliding on interaction.
-
 ---
 
 ### 10. `CartModal.jsx`
