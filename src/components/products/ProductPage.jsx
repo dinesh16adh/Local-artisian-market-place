@@ -15,7 +15,7 @@ const ProductPage = ({ addToCart, isLoggedIn, cartItems, setCartItems }) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`${backendUrl}/items`);
+        const response = await fetch(`${backendUrl}/product/items`);
         const data = await response.json();
         const foundProduct = data.items.find(item => item.id === parseInt(productId));
         setProduct(foundProduct);
