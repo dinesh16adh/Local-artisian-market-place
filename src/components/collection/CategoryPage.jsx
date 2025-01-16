@@ -18,7 +18,7 @@ const CategoryPage = ({ addToCart }) => {
   useEffect(() => {
     const fetchCategoryProducts = async () => {
       try {
-        const response = await fetch(`${backendUrl}/items`);
+        const response = await fetch(`${Url}product/items`);
         const data = await response.json();
         const categoryProducts = data.items.filter(item => item.category === category);
         setProducts(categoryProducts);

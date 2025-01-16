@@ -12,7 +12,7 @@ const TopSales = ({ addToCart }) => {
   useEffect(() => {
     const fetchTopSales = async () => {
       try {
-        const response = await fetch(`${backendUrl}/items`);
+        const response = await fetch(`${backendUrl}product/items`);
         const data = await response.json();
         setTopSales(data.items.slice(0, 5)); // Only get the latest 5 products
       } catch (error) {

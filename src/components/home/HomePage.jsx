@@ -31,7 +31,7 @@ const HomePage = ({ addToCart }) => {
   useEffect(() => {
     const fetchItemsAndCategories = async () => {
       try {
-        const itemsResponse = await fetch(`${backendUrl}/items`);
+        const itemsResponse = await fetch(`${backendUrl}product/items`);
         const itemsData = await itemsResponse.json();
         setItems(itemsData.items || []);
         
