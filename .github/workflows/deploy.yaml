@@ -15,8 +15,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Checkout repository
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      # Step 2: Detect package manager
       - name: Detect package manager
         id: detect-package-manager
         run: |
@@ -34,27 +37,36 @@ jobs:
             echo "Unable to determine package manager"
             exit 1
           fi
+
+      # Step 3: Set up Node.js
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "21"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
+
+      # Step 4: Install dependencies
       - name: Install dependencies
         run: npm install
+
+      # Step 5: Build the project
       - name: Build project
-        run:  npm run build
+        run: npm run build
+
+      # Step 6: Upload artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
           path: ./dist
-  # Deployment job
+
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}      
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     steps:
+      # Step 1: Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v3
